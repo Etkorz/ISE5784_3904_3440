@@ -51,8 +51,6 @@ public class Vector extends Point {
     }
 
     /**
-     * Scales this vector by the specified scalar value.
-     *
      * @param scalar The scalar value to multiply with.
      * @return The scaled vector.
      */
