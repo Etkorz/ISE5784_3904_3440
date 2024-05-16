@@ -6,6 +6,11 @@ import static java.lang.System.out;
 import static org.junit.jupiter.api.Assertions.*;
 import static primitives.Util.isZero;
 
+/**
+ *  Unit tests for primitives.Vector class
+ * @author Eti and Gitty
+ */
+
 class VectorTest {
 
     /**
