@@ -3,6 +3,9 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
+
 /**
  * Tube class represents three-dimensional Tube in 3D Cartesian coordinate
  * system
@@ -23,6 +26,15 @@ public class Tube extends RadialGeometry{
 
     @Override
     public Vector getNormal(Point point) {
-        return null;
+        Vector v=axis.getDirection();
+        Point p0=axis.getHead();
+
+        //if vector between p0 to point is orthogonal to v(axis direction)
+        if(!isZero(point.subtract(p0).dotProduct(v))){
+            double t=v.dotProduct(point.subtract(p0));
+            p0=p0.add(v.scale(t));
+        }
+
+        return point.subtract(p0).normalize();
     }
 }

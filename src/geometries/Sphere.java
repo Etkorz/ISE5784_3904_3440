@@ -22,11 +22,13 @@ public class Sphere extends RadialGeometry{
     }
 
     /**
+     * calculates and return normal
      * @param point
      * @return
      */
     @Override
-    public Vector getNormal(Point point) {
-        return null;
+    public Vector getNormal(Point point){
+        Vector N=point.subtract(center);
+        return N.normalize();
     }
 }
