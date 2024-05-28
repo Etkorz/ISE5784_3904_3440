@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Testing Spheres
+ *
  * @author Gitty Shapira and Eti Kenig
  */
 class SphereTest {
@@ -20,9 +21,9 @@ class SphereTest {
     void testGetNormal() {
         // ============ Equivalence Partitions Tests ==============
         // TC01 Simply test for Normal of Sphere
-        Sphere sph= new Sphere(1.0, new Point(0,0,0));
-        assertEquals(new Vector(0,0,1),
-                sph.getNormal(new Point(0,0,1)),
+        Sphere sphere = new Sphere(new Point(0, 0, 0), 1.0);
+        assertEquals(new Vector(0, 0, 1),
+                sphere.getNormal(new Point(0, 0, 1)),
                 "not good normal for Sphere"
         );
     }

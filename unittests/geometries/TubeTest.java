@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Testing Tubes
  * @author Gitty Shapira and Eti Kenig
  */
-class testTubeTest {
+class TubeTest {
 
     /**
      * Test method for
@@ -24,15 +24,15 @@ class testTubeTest {
 
         // ============ Equivalence Partitions Tests ==============
         // TC01 Simply test for Normal of Tube
-        assertEquals(tube.getNormal(new Point(1,0,1)).normalize(),
-                new Vector(1,0,0),
+        assertEquals(new Vector(1,0,0),
+                tube.getNormal(new Point(1,0,1)).normalize(),
                 "Normal is not orthogonal to the Tube"
         );
 
         // =============== Boundary Values Tests ==================
         //TC02 The Point is in front of the head fo the Ray
-        assertEquals(tube.getNormal(new Point(1,0,0)).normalize(),
-                new Vector(1,0,0),
+        assertEquals(new Vector(1,0,0),
+                tube.getNormal(new Point(1,0,0)).normalize(),
                 "The Point is in front of the head fo the Ray"
         );
     }

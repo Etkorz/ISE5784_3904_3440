@@ -14,9 +14,9 @@ public class Plane implements Geometry {
 
     /**
      * constructor plane from 3 points
-     * @param v0
-     * @param v1
-     * @param v2
+     * @param v0 point v0
+     * @param v1 point v1
+     * @param v2  point v2
      */
     public Plane(Point v0, Point v1, Point v2){
         Vector vector1=v0.subtract(v1);//vector between v0 to v1
@@ -27,8 +27,8 @@ public class Plane implements Geometry {
 
     /**
      * constructor
-     * @param q
-     * @param normal
+     * @param q  point in the meddle of the camara
+     * @param normal vector of the normal (normalized automatic)
      */
     public Plane(Point q, Vector normal) {
         this.q = q;
@@ -45,7 +45,7 @@ public class Plane implements Geometry {
 
     /**
      *calculates and return normal
-     * @param point
+     * @param point {@link Point} external to the shape
      * @return vector normal to the plane
      */
     @Override

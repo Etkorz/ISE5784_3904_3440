@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Testing Cylinders
  * @author Gitty Shapira and Eti Kenig
  */
-class testCylinderTest {
+class CylinderTest {
 
     /**
      * Test method for

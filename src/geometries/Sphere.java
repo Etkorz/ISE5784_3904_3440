@@ -13,10 +13,11 @@ public class Sphere extends RadialGeometry{
 
     /**
      * constructor
-     * @param radius
+     *
      * @param center
+     * @param radius
      */
-    public Sphere(double radius, Point center) {
+    public Sphere(Point center, double radius) {
         super(radius);
         this.center = center;
     }
@@ -28,7 +29,6 @@ public class Sphere extends RadialGeometry{
      */
     @Override
     public Vector getNormal(Point point){
-        Vector N=point.subtract(center);
-        return N.normalize();
+        return point.subtract(center).normalize();
     }
 }

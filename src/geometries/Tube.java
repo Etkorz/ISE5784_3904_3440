@@ -3,7 +3,6 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
-import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
 /**
@@ -16,8 +15,8 @@ public class Tube extends RadialGeometry{
 
     /**
      * constructor
-     * @param axis
-     * @param radius
+     * @param axis ray
+     * @param radius radius
      */
     public Tube(Ray axis, double radius) {
         super(radius);
