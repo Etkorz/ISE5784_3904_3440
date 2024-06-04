@@ -4,7 +4,7 @@ import primitives.*;
  * Geometry interface represents a geometric body
  * @author Eti Kenig and Gitty Shapira
  */
-public interface Geometry {
+public interface Geometry extends Intersectable {
     /**
      * @param point
      * @return

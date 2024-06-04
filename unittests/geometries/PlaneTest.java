@@ -60,4 +60,7 @@ class PlaneTest {
         );
     }
 
+    @Test
+    void testFindIntersections() {
+    }
 }

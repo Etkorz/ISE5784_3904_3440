@@ -1,7 +1,11 @@
 package geometries;
 
+import primitives.Ray;
 import primitives.Vector;
 import primitives.Point;
+
+import java.util.List;
+
 /**
  * Plain class represents two-dimensional plain in 3D Cartesian coordinate
  * system
@@ -53,4 +57,8 @@ public class Plane implements Geometry {
         return normal;
     }
 
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        return null;
+    }
 }
