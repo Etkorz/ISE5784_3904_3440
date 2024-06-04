@@ -6,6 +6,11 @@ import static java.lang.System.out;
 import static org.junit.jupiter.api.Assertions.*;
 import static primitives.Util.isZero;
 
+/**
+ *  Unit tests for primitives.Vector class
+ * @author Eti and Gitty
+ */
+
 class VectorTest {
 
     /**
@@ -75,7 +80,10 @@ class VectorTest {
         // ============ Equivalence Partitions Tests ==============
         Vector vr = v1.crossProduct(v3);
         // TC01: Test that length of cross-product is proper (orthogonal vectors taken for simplicity)
-        assertTrue(isZero(vr.length()-(v1.length() * v3.length())), "ERROR: crossProduct() wrong result length");
+        assertEquals(v1.length() * v3.length(),
+                vr.length(),
+                0.00001,
+                "ERROR: crossProduct() wrong result length");
         // TC02: Test cross-product result orthogonality to its operands
         assertTrue(
                 isZero(vr.dotProduct(v1)) && isZero(vr.dotProduct(v3)),
@@ -90,7 +98,10 @@ class VectorTest {
     void testLengthSquared() {
         // ============ Equivalence Partitions Tests ==============
         Vector v1 = new Vector(1, 2, 3);
-        assertEquals(14, v1.lengthSquared(), 0.00001, "ERROR: lengthSquared() wrong value");
+        assertEquals(14,
+                v1.lengthSquared(),
+                0.00001,
+                "ERROR: lengthSquared() wrong value");
     }
 
     /**
@@ -112,7 +123,10 @@ class VectorTest {
         Vector u = v.normalize();
         // ============ Equivalence Partitions Tests ==============
         //TC01 test that the length of normalized vector equal 1.
-        assertTrue(isZero(u.length() - 1),"ERROR: the normalized vector is not a unit vector");
+        assertEquals(1,
+                u.length(),
+                0.0001,
+                "ERROR: the normalized vector is not a unit vector");
 
         //TC02 test that the normalized vector is parallel to the original one.
         assertThrows(

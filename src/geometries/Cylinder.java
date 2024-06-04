@@ -2,6 +2,7 @@ package geometries;
 
 import primitives.Point;
 import primitives.Ray;
+import primitives.Vector;
 
 /**
  * Cylinder class represents three-dimensional Cylinder in 3D Cartesian coordinate
@@ -23,5 +24,7 @@ public class Cylinder extends Tube{
         this.height = height;
     }
 
-
+    public Vector getNormal(Point point) {
+        return null;
+    }
 }

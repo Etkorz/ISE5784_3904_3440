@@ -6,6 +6,11 @@ import static java.lang.System.out;
 import static org.junit.jupiter.api.Assertions.*;
 import static primitives.Util.isZero;
 
+/**
+ *  Unit tests for primitives.Point class
+ * @author Eti and Gitty
+ */
+
 class PointTest {
     private Point p1 = new Point(1, 2, 3);
     private Point p2 = new Point(2, 4, 6);
