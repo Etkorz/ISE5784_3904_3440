@@ -13,6 +13,8 @@ import static primitives.Util.isZero;
 
 class VectorTest {
 
+    public static final double DELTA = 0.00001;
+
     /**
      * Test method for {@link primitives.Vector#add(primitives.Vector)}.
      * */
@@ -56,10 +58,10 @@ class VectorTest {
         Vector v3 = new Vector(0, 3, -2);
 
         // =============== Boundary Values Tests ==================
-        assertEquals(0d,v1.dotProduct(v3),0.00001, "ERROR: dotProduct() for orthogonal vectors is not zero");
+        assertEquals(0d,v1.dotProduct(v3), DELTA, "ERROR: dotProduct() for orthogonal vectors is not zero");
 
         // ============ Equivalence Partitions Tests ==============
-        assertEquals(-28d, v1.dotProduct(v2), 0.00001, "ERROR: dotProduct() wrong value");
+        assertEquals(-28d, v1.dotProduct(v2), DELTA, "ERROR: dotProduct() wrong value");
     }
 
     /**
@@ -82,7 +84,7 @@ class VectorTest {
         // TC01: Test that length of cross-product is proper (orthogonal vectors taken for simplicity)
         assertEquals(v1.length() * v3.length(),
                 vr.length(),
-                0.00001,
+                DELTA,
                 "ERROR: crossProduct() wrong result length");
         // TC02: Test cross-product result orthogonality to its operands
         assertTrue(
@@ -100,7 +102,7 @@ class VectorTest {
         Vector v1 = new Vector(1, 2, 3);
         assertEquals(14,
                 v1.lengthSquared(),
-                0.00001,
+                DELTA,
                 "ERROR: lengthSquared() wrong value");
     }
 
@@ -111,7 +113,7 @@ class VectorTest {
     void testLength() {
         // ============ Equivalence Partitions Tests ==============
         Vector v1 = new Vector(2, 4, 4);
-        assertEquals(6, v1.length(), 0.00001, "ERROR: lengthSquared() wrong value");
+        assertEquals(6, v1.length(), DELTA, "ERROR: lengthSquared() wrong value");
     }
 
     /**
@@ -125,7 +127,7 @@ class VectorTest {
         //TC01 test that the length of normalized vector equal 1.
         assertEquals(1,
                 u.length(),
-                0.0001,
+                DELTA,
                 "ERROR: the normalized vector is not a unit vector");
 
         //TC02 test that the normalized vector is parallel to the original one.

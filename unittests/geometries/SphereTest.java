@@ -25,9 +25,9 @@ class SphereTest {
     void testGetNormal() {
         // ============ Equivalence Partitions Tests ==============
         // TC01 Simply test for Normal of Sphere
-        Sphere sphere = new Sphere(new Point(0, 0, 0), 1.0);
+        Sphere sphere = new Sphere(Point.ZERO, 2.0);
         assertEquals(new Vector(0, 0, 1),
-                sphere.getNormal(new Point(0, 0, 1)),
+                sphere.getNormal(new Point(0, 0, 2)),
                 "not good normal for Sphere"
         );
     }

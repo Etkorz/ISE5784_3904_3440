@@ -1,14 +1,19 @@
 package geometries;
 
+import primitives.Double3;
 import primitives.Ray;
 import primitives.Vector;
 import primitives.Point;
 
 import java.util.List;
 
+import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
+
 /**
  * Plain class represents two-dimensional plain in 3D Cartesian coordinate
  * system
+ *
  * @author Eti Kenig and Gitty Shapira
  */
 public class Plane implements Geometry {
@@ -18,20 +23,22 @@ public class Plane implements Geometry {
 
     /**
      * constructor plane from 3 points
+     *
      * @param v0 point v0
      * @param v1 point v1
-     * @param v2  point v2
+     * @param v2 point v2
      */
-    public Plane(Point v0, Point v1, Point v2){
-        Vector vector1=v0.subtract(v1);//vector between v0 to v1
-        Vector vector2=v1.subtract(v2);// vector between v1 to v2
+    public Plane(Point v0, Point v1, Point v2) {
+        Vector vector1 = v0.subtract(v1);//vector between v0 to v1
+        Vector vector2 = v1.subtract(v2);// vector between v1 to v2
         this.normal = vector1.crossProduct(vector2).normalize();
         this.q = v0;
     }
 
     /**
      * constructor
-     * @param q  point in the meddle of the camara
+     *
+     * @param q      point in the meddle of the camara
      * @param normal vector of the normal (normalized automatic)
      */
     public Plane(Point q, Vector normal) {
@@ -41,6 +48,7 @@ public class Plane implements Geometry {
 
     /**
      * getter for normal
+     *
      * @return vector normal to the plane
      */
     public Vector getNormal() {
@@ -48,7 +56,8 @@ public class Plane implements Geometry {
     }
 
     /**
-     *calculates and return normal
+     * calculates and return normal
+     *
      * @param point {@link Point} external to the shape
      * @return vector normal to the plane
      */
@@ -57,8 +66,44 @@ public class Plane implements Geometry {
         return normal;
     }
 
+    /**
+     * calculates and returns the intersection points between the ray and plane
+     *
+     * @param ray
+     * @return list of intersection points
+     */
     @Override
     public List<Point> findIntersections(Ray ray) {
+        Point P0 = ray.getHead();
+        Vector v = ray.getDirection();
+        Vector n = normal;
+
+        double nv = n.dotProduct(v);
+
+        //if the ray parallel to the plane there are no intersection points
+        if (isZero(nv)) {
+            return null;
+        }
+
+        //If the p0 is the reference point - there are no intersections
+        if (q.equals(P0)) {
+            return null;
+        }
+
+        double numerator = n.dotProduct(q.subtract(P0));//n*qP0
+        //
+        if (isZero(numerator)) {
+            return null;
+        }
+
+        //
+        double t = alignZero(numerator / nv); //t= numretor/nv
+        //
+        if (t > 0) {
+            return List.of(ray.getPoint(t));
+        }
+
+        //there is no intersection points
         return null;
     }
 }

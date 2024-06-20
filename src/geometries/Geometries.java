@@ -3,12 +3,13 @@ package geometries;
 import primitives.Point;
 import primitives.Ray;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Geometries extends Intersectable {
+public class Geometries implements Intersectable {
 
-private final List<Intersectable> geometries = new LinkedList<>();
+private final List<Intersectable> intersectableList = new LinkedList<>();
 
     /**
      *empty constructor
@@ -18,21 +19,22 @@ private final List<Intersectable> geometries = new LinkedList<>();
     }
 
     /**
-     *constructor
-     * @param geometries- list fo geometries
+     *add the Intersectable objects to the collection
+     *
+     * @param geometries- group of Intersectable objects to add to the collection
      */
-    public Geometries(Intersectable... geometries) {
-           add(this);
+    public void add(Intersectable... geometries){
+        this.intersectableList.addAll(List.of(geometries));
     }
 
     /**
-     *add geometries to the list
-     *
-     * @param geometries- group of geometries
+     *constructor- creat collection of geometries from the Intersectable object given by using function add
+     * @param intersectableList- list of geometries
      */
-    public void add(Intersectable... geometries){
-          this.geometries.addAll(List.of(geometries));
+    public Geometries(Intersectable... intersectableList) {
+           add(this);
     }
+
 
     /**
      *return null temper

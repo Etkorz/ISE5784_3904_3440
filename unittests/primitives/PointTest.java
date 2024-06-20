@@ -12,6 +12,7 @@ import static primitives.Util.isZero;
  */
 
 class PointTest {
+    public static final double DELTA = 0.00001;
     private Point p1 = new Point(1, 2, 3);
     private Point p2 = new Point(2, 4, 6);
     private Point p3 = new Point(2, 4, 5);
@@ -59,7 +60,7 @@ class PointTest {
     @Test
     void testDistance() {
         // ============ Equivalence Partitions Tests ==============
-        assertEquals(3,p1.distance(p3),0.00001, "ERROR: distance is wrong");
+        assertEquals(3,p1.distance(p3), DELTA, "ERROR: distance is wrong");
     }
 
     /**
@@ -68,6 +69,9 @@ class PointTest {
     @Test
     void testDistanceSquared() {
         // ============ Equivalence Partitions Tests ==============
-        assertEquals (9,p1.distanceSquared(p3),"ERROR: squared distance between points is wrong");
+        assertEquals (9,
+                p1.distanceSquared(p3),
+                DELTA,
+                "ERROR: squared distance between points is wrong");
     }
 }
