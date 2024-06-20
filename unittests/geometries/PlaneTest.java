@@ -111,8 +111,7 @@ class PlaneTest {
                 "Ray starts in plane and isn't orthogonal or parallel to the plane");
 
         // TC09: Ray begins in the same point that appears as the reference point of plane
-        assertNull(plane.findIntersections(new Ray(new Point(-2, 0, 0),
-                new Vector(1, 1, 1))),
+        assertNull(plane.findIntersections(new Ray(new Point(-2, 0, 0), new Vector(1, 1, 1))),
                 "Ray starts at Q0");
 
     }

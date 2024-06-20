@@ -42,6 +42,19 @@ private final List<Intersectable> intersectableList = new LinkedList<>();
      * @return null
      */
     public List<Point> findIntersections(Ray ray) {
-        return null;
+
+        List<Point> result = null;
+
+        //for each geometry add is intersection points to the list
+        for (var geometry : intersectableList) {
+            List<Point> geometryResult= geometry.findIntersections(ray);
+            if (geometryResult != null) {
+                if (result==null) {
+                    result = new LinkedList<>();
+                }
+                result.addAll(geometryResult);
+            }
+        }
+        return result;
     }
 }
