@@ -2,20 +2,24 @@ package geometries;
 
 import primitives.Point;
 import primitives.Ray;
-
+import primitives.Vector;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Geometries implements Intersectable {
 
-private final List<Intersectable> intersectableList = new LinkedList<>();
+    private final List<Intersectable> intersectableList = new LinkedList<>();
 
     /**
      *empty constructor
      */
-    public Geometries() {
+    public Geometries() {}
 
+    public Geometries(Intersectable... geometries) {
+        this();
+        add(this);
     }
 
     /**
@@ -24,15 +28,8 @@ private final List<Intersectable> intersectableList = new LinkedList<>();
      * @param geometries- group of Intersectable objects to add to the collection
      */
     public void add(Intersectable... geometries){
-        this.intersectableList.addAll(List.of(geometries));
-    }
 
-    /**
-     *constructor- creat collection of geometries from the Intersectable object given by using function add
-     * @param intersectableList- list of geometries
-     */
-    public Geometries(Intersectable... intersectableList) {
-           add(this);
+        Collections.addAll(intersectableList, geometries);
     }
 
 
@@ -46,8 +43,8 @@ private final List<Intersectable> intersectableList = new LinkedList<>();
         List<Point> result = null;
 
         //for each geometry add is intersection points to the list
-        for (var geometry : intersectableList) {
-            List<Point> geometryResult= geometry.findIntersections(ray);
+        for (var item : intersectableList) {
+            List<Point> geometryResult= item.findIntersections(ray);
             if (geometryResult != null) {
                 if (result==null) {
                     result = new LinkedList<>();

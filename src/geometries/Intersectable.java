@@ -1,8 +1,7 @@
 package geometries;
 
-import primitives.*;
 import primitives.Ray;
-
+import primitives.Point;
 import java.util.List;
 
 /**
@@ -15,7 +14,8 @@ public interface Intersectable {
      * @param ray
      * @return
      */
-   List<Point> findIntersections(Ray ray);//do i need to add public?
+   List<Point> findIntersections(Ray ray);
+
 
 
 }

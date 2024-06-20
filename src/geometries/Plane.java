@@ -81,31 +81,34 @@ public class Plane implements Geometry {
 
         double nv = n.dotProduct(v);
 
-        //if the ray parallel to the plane there are no intersection points
+        // If the ray parallel to the plane - there are no intersections
         if (isZero(nv)) {
             return null;
         }
 
-        //If the p0 is the reference point - there are no intersections
+        // If the p0 is the reference point - there are no intersections
         if (q.equals(P0)) {
             return null;
         }
 
-        double numerator = n.dotProduct(q.subtract(P0));//n*qP0
-        //
-        if (isZero(numerator)) {
+        // Calculate the intersection point
+        Vector QP0 = q.subtract(ray.getHead());
+        double numer = normal.dotProduct(QP0);
+        double t = alignZero(numer / nv);
+
+        // If the intersection point is behind the origin of the ray, there are no intersections
+        if (t <= 0)
             return null;
-        }
 
-        //
-        double t = alignZero(numerator / nv); //t= numretor/nv
-        //
+        ;
+        // If t>0 the ray intersects the plane
         if (t > 0) {
-            return List.of(ray.getPoint(t));
+            return List.of(P0.add(v.scale(t)));
         }
 
-        //there is no intersection points
+        // Else - there are no intersections
         return null;
+
     }
 
 }

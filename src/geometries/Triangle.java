@@ -24,36 +24,35 @@ public class Triangle extends Polygon {
     @Override
     public List<Point> findIntersections(Ray ray) {
 
+        // find intersection of triangle with plane
+        List<Point> intersections = plane.findIntersections(ray);
+
+        //if there are no intersection- return null
+        if (intersections==null)
+            return null;
+
         //get the head and direction of ray
         Point p0 = ray.getHead();
         Vector v = ray.getDirection();
 
         //get the vertices of the triangle
-        Point p1 = vertices.get(0);
-        Point p2 = vertices.get(1);
-        Point p3 = vertices.get(2);
-
-        //calculate the vector between the triangles vertices and ray
-        Vector v1 = p1.subtract(p0);
-        Vector v2 = p2.subtract(p0);
-        Vector v3 = p3.subtract(p0);
-
-        //normal the vector from above
-        Vector n1 = v1.crossProduct(v2).normalize();
-        Vector n2 = v2.crossProduct(v3).normalize();
-        Vector n3 = v3.crossProduct(v1).normalize();
+        Vector vector1 = vertices.get(0).subtract(p0);
+        Vector vector2 = vertices.get(1).subtract(p0);
+        Vector vector3 = vertices.get(2).subtract(p0);
 
         //calculate the dot products of the ray direction and the normal vector
-        double nv1 = v.dotProduct(n1);//v*(v1Xv2)
-        double nv2 = v.dotProduct(n2);//v*(v2Xv3)
-        double nv3 = v.dotProduct(n3);//v*(v3Xv1)
+        //return the vector that
+        double nv1 = v.dotProduct(vector1.crossProduct(vector2));//v*(v1Xv2)
+        double nv2 = v.dotProduct(vector2.crossProduct(vector3));//v*(v2Xv3)
+        double nv3 = v.dotProduct(vector3.crossProduct(vector1));//v*(v3Xv1)
 
         if (isZero(nv1) || isZero(nv2) || isZero(nv3))
             return null;
 
+        // if ALL the products are positive or ALL the products are negatives the point is inside the triangle
         if ((nv1 > 0 && nv2 > 0 && nv3 > 0) || (nv1 < 0 && nv2 < 0 && nv3 < 0))
-            return plane.findIntersections(ray);
-
-        return null;
+            return intersections;
+        else
+            return null;
     }
 }

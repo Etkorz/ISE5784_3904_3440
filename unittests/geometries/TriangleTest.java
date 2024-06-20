@@ -38,43 +38,40 @@ class TriangleTest {
 
     @Test
     void testFindIntersections() {
-        Triangle triangle=new Triangle(new Point(0,2,0),new Point(2,0,0),new Point(-2,0,1));
-        Plane plane=new Plane(new Point(1,0,0),new Point(0,1,0),new Point(0,0,1));
-        Point point=new Point(1,-1,-1);
-
+        Triangle tr = new Triangle(new Point(1, 0, 0), new Point(0, 1, 0), new Point(0, 0, 1));
+        Plane pl = new Plane(new Point(1, 0, 0), new Point(0, 1, 0), new Point(0, 0, 1));
+        Ray ray;
 
         // ============ Equivalence Partitions Tests ==============
-        //TC01 Intersection point Inside triangle(1 point)
-        List<Point> result=triangle.findIntersections(new Ray(new Point(0,0,2),new Vector(0,-1,-2)));
-        assertEquals(1, result.size(), "Wrong number of points");
-        assertEquals(List.of(new Point(0,1,0)),
-                result,
-                "Intersection point Inside triangle");
+        // TC01: Intersection point inside triangle
+        ray = new Ray(new Point(1, 1, 1), new Vector(-1, -1, -1));
+        assertEquals(List.of(new Point(1d / 3, 1d / 3, 1d / 3)), tr.findIntersections(ray), "Bad intersection");
 
-        //TC02 Intersection point Outside triangle(0 points)
-        assertNull(triangle.findIntersections(new Ray(point,new Vector(0,2,4))),
-                "Intersection point Outside triangle");
+        // TC02: Intersection point outside triangle
+        ray = new Ray(new Point(0, 0, -1), new Vector(1, 1, 0));
+        assertEquals(List.of(new Point(1, 1, -1)), pl.findIntersections(ray), "Wrong intersection with plane");
+        assertNull(tr.findIntersections(ray), "Bad intersection");
 
-        //TC03 Intersection point Outside triangle and against vertex(0 points)
-        assertNull(triangle.findIntersections(new Ray(point,new Vector(-1,4,1))),
-                "Intersection point Outside triangle and against vertex");
+        // TC03: Intersection point outside triangle and against vertex
+        ray = new Ray(new Point(0, 0, 2), new Vector(-1, -1, 0));
+        assertEquals(List.of(new Point(-0.5, -0.5, 2)), pl.findIntersections(ray), "Wrong intersection with plane");
+        assertNull(tr.findIntersections(ray), "Bad intersection");
 
+        // =============== Boundary Values Tests ==================
+        // TC11: Intersection point on vertex
+        ray = new Ray(new Point(-1, 0, 0), new Vector(1, 1, 0));
+        assertEquals(List.of(new Point(0, 1, 0)), pl.findIntersections(ray), "Wrong intersection with plane");
+        assertNull(tr.findIntersections(ray), "Bad intersection");
 
-        // // =============== Boundary Values Tests ==================
-        //** the ray begin before the plane
-        //TC11 Intersection point on edge(0 points)
-        assertNull(triangle.findIntersections(new Ray(point,new Vector(-1,3,1))),
-                "Intersection point on edge");
+        // TC12: Intersection point on edge
+        ray = new Ray(new Point(-1, -1, 0), new Vector(1, 1, 0));
+        assertEquals(List.of(new Point(0.5, 0.5, 0)), pl.findIntersections(ray), "Wrong intersection with plane");
+        assertNull(tr.findIntersections(ray), "Bad intersection");
 
-
-        //TC12 Intersection point on vertex(0 points)
-        assertNull(triangle.findIntersections(new Ray(point,new Vector(-2,1,1))),
-                "Intersection point on vertex");
-
-
-        //TC13 Intersection point on edge's continuation(0 points)
-        assertNull(triangle.findIntersections(new Ray(point,new Vector(-4,1,1))),
-                "Intersection point on edge's continuation");
+        // TC13: Intersection point on edge continuation
+        ray = new Ray(new Point(-2, 0, 0), new Vector(1, 1, 0));
+        assertEquals(List.of(new Point(-0.5, 1.5, 0)), pl.findIntersections(ray), "Wrong intersection with plane");
+        assertNull(tr.findIntersections(ray), "Bad intersection");
 
     }
 }

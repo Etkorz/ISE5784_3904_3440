@@ -71,7 +71,7 @@ class PlaneTest {
         // ============ Equivalence Partitions Tests ==============
 
         //TC01 Ray intersects the plane
-        List<Point> result01= plane.findIntersections(new Ray(point1, new Vector(1,0,0)));
+        List<Point> result01= plane.findIntersections(new Ray(point1, new Vector(0,9,8)));
         assertEquals(1, result01.size(), "wrong number of intersections");
         assertEquals(List.of(new Point(-1, 2.25, 0)), result01, "Ray intersect the plane");
 

@@ -1,5 +1,6 @@
 package geometries;
-import primitives.*;
+import primitives.Point;
+import primitives.Vector;
 /**
  * Geometry interface represents a geometric body
  * @author Eti Kenig and Gitty Shapira

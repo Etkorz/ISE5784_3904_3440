@@ -55,7 +55,10 @@ public class Vector extends Point {
      * @return The scaled vector.
      */
     public Vector scale(double scalar) {
-        return new Vector(xyz.scale(scalar));
+        if (Util.isZero(scalar)) {
+            throw new IllegalArgumentException("Cannot create zero vector");
+        }
+        return new Vector(this.xyz.scale(scalar));
     }
 
     /**
@@ -64,8 +67,8 @@ public class Vector extends Point {
      * @param v3 The vector to compute the dot product with.
      * @return The dot product of the two vectors.
      */
-    public int dotProduct(Vector v3) {
-        return (int) (this.xyz.d1 * v3.xyz.d1 + this.xyz.d2 * v3.xyz.d2 + this.xyz.d3 * v3.xyz.d3);
+    public double dotProduct(Vector v3) {
+        return this.xyz.d1 * v3.xyz.d1 + this.xyz.d2 * v3.xyz.d2 + this.xyz.d3 * v3.xyz.d3;
     }
 
     /**
