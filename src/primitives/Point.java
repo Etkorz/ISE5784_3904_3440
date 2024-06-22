@@ -41,7 +41,7 @@ public class Point {
      * @return The vector pointing from this point to the other point.
      */
     public Vector subtract(Point p1) {
-        return new Vector(xyz.subtract(p1.xyz));
+        return new Vector(this.xyz.subtract(p1.xyz));
     }
 
     /**
@@ -51,7 +51,7 @@ public class Point {
      * @return The point resulting from adding the vector to this point.
      */
     public Point add(Vector v1) {
-        return new Point(xyz.add(v1.xyz));
+        return new Point(this.xyz.add(v1.xyz));
     }
 
     /**

@@ -65,7 +65,8 @@ class SphereTest {
         assertEquals(List.of(gp2),
                 sphere.findIntersections(new Ray(new Point(0.5,0.5,0),v310)),
                 "Ray starts inside the sphere");
-        assertEquals(1, result1.size(), "Wrong number of points");//cheek if need
+
+        assertEquals(1, result1.size(), "Wrong number of points");
 
         // // TC04: Ray starts after the sphere (0 points)
         assertNull(sphere.findIntersections(new Ray(new Point(2,1,0), v310)),

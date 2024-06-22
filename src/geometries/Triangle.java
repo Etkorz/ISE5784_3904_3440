@@ -50,9 +50,6 @@ public class Triangle extends Polygon {
             return null;
 
         // if ALL the products are positive or ALL the products are negatives the point is inside the triangle
-        if ((nv1 > 0 && nv2 > 0 && nv3 > 0) || (nv1 < 0 && nv2 < 0 && nv3 < 0))
-            return intersections;
-        else
-            return null;
+        return ((nv1 > 0 && nv2 > 0 && nv3 > 0) || (nv1 < 0 && nv2 < 0 && nv3 < 0)) ? intersections : null;
     }
 }

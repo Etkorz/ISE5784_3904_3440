@@ -13,13 +13,12 @@ public class Geometries implements Intersectable {
     private final List<Intersectable> intersectableList = new LinkedList<>();
 
     /**
-     *empty constructor
+     * Default constructor
      */
     public Geometries() {}
 
     public Geometries(Intersectable... geometries) {
-        this();
-        add(this);
+        this.add(geometries);
     }
 
     /**
@@ -43,7 +42,7 @@ public class Geometries implements Intersectable {
         List<Point> result = null;
 
         //for each geometry add is intersection points to the list
-        for (var item : intersectableList) {
+        for (var item : this.intersectableList) {
             List<Point> geometryResult= item.findIntersections(ray);
             if (geometryResult != null) {
                 if (result==null) {
@@ -53,5 +52,30 @@ public class Geometries implements Intersectable {
             }
         }
         return result;
+//        int amount = 0;
+//        List<Point> lstIntersection;
+//
+//        // Iterate over all the geometries in this composite object.
+//        for (Intersectable geometry : this.intersectableList) {
+//            lstIntersection = geometry.findIntersections(ray);
+//            if (lstIntersection != null)
+//                amount += lstIntersection.size();
+//        }
+//
+//        // If there are no intersection points, return null.
+//        if (amount == 0)
+//            return null;
+//
+//        // Collect all the intersection points in a list.
+//        List<Point> lstAllIntersections = new LinkedList<Point>();
+//        for (Intersectable geometry : this.intersectableList) {
+//            lstIntersection = geometry.findIntersections(ray);
+//            if (lstIntersection != null)
+//                lstAllIntersections.addAll(lstIntersection);
+//        }
+//
+//        // Return the list of intersection points.
+//        return lstAllIntersections;
     }
+
 }

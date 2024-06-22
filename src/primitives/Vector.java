@@ -47,7 +47,7 @@ public class Vector extends Point {
      */
     @Override
     public Vector add(Vector v) {
-        return new Vector(v.xyz.add(this.xyz));
+        return new Vector(this.xyz.add(v.xyz));
     }
 
     /**
@@ -121,5 +121,9 @@ public class Vector extends Point {
         return "Vector{" +
                 "xyz=" + xyz +
                 '}';
+    }
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
     }
 }

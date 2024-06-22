@@ -70,4 +70,6 @@ public class Ray {
         return head.add(direction.scale(t));
 
     }
+
+
 }
