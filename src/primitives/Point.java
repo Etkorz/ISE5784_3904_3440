@@ -103,5 +103,28 @@ public class Point {
                 "xyz=" + xyz +
                 '}';
     }
+    /**
+     *
+     * @return the value of x-axis
+     */
+    public double getX() {
+        return xyz.d1;
+    }
+
+    /**
+     *
+     * @return the value of y-axis
+     */
+    public double getY() {
+        return xyz.d2;
+    }
+
+    /**
+     *
+     * @return the value of z-axis
+     */
+    public double getZ() {
+        return xyz.d3;
+    }
 }
 
