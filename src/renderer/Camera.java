@@ -9,6 +9,12 @@ import java.util.MissingResourceException;
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
+/**
+ * The Camera class represents a virtual camera in a 3D space.
+ * It provides methods to set up the camera's position, orientation, and viewport size and distance.
+ *
+ * @author Gitty Shapira and Eti Kortiz
+ */
 public class Camera implements Cloneable {
 
     //the position of the camera in D3
@@ -33,20 +39,46 @@ public class Camera implements Cloneable {
      */
     private Camera(){}
 
+    /**
+     * Returns a new builder instance for creating a `Camera` object.
+     *
+     * @return A new `Builder` instance to configure and build a `Camera`.
+     */
     public static Builder getBuilder(){
         return new Builder();
     }
 
     /**
+     * Constructs a ray based on pixel coordinates within the camera's viewport.
      *
-     * @param nX represents number of pixels in columns
-     * @param nY represents number of pixels in rows
-     * @param j represents the x coordinate of pixel
-     * @param i represents the y coordinate of pixel
-     * @return for now return null
+     * @param nX The number of pixels in the horizontal direction (width).
+     * @param nY The number of pixels in the vertical direction (height).
+     * @param j The horizontal pixel index (column index, 0-based).
+     * @param i The vertical pixel index (row index, 0-based).
+     * @return A new Ray object representing the ray originating from the camera's position and passing through the specified pixel.
+     * @throws IllegalArgumentException If either `nX` or `nY` is zero (division by zero would occur).
      */
     public Ray constructRay(int nX, int nY, int j, int i){
-        return null;
+        if (nY == 0 || nX == 0) {
+            throw new IllegalArgumentException("It is impossible to divide by 0");
+        }
+        Point Pc = position.add(toDirection.scale(vpDistance));
+        double Ry = vpHeigth / nY;
+        double Rx = vpWidth / nX;
+
+        double Yi = -1 * (i - (nY - 1) / 2.0) * Ry;
+        double Xj = (j - (nX - 1) / 2.0) * Rx;
+
+        Point Pij = Pc;
+        if (!isZero(Xj)) {
+            Pij = Pij.add(rightDirection.scale(Xj));
+        }
+
+        if (!isZero(Yi)) {
+            Pij = Pij.add(upDirection.scale(Yi));
+        }
+
+        return new Ray(position, Pij.subtract(position));
     }
 
     /**
@@ -73,7 +105,7 @@ public class Camera implements Cloneable {
         /**
          * set the position of the camera
          * @param location the position to set the camera
-         * @return the current builder camera
+         * @return the current camera object
          * @throws IllegalArgumentException if the given location is null
          */
         public Builder setLocation(Point location){
@@ -88,7 +120,7 @@ public class Camera implements Cloneable {
          *set the direction of the camera
          * @param toDirection the toward direction vector
          * @param upDirection the up direction vector
-         * @return the current builder camera
+         * @return the current camera object
          * @throws IllegalArgumentException if the vectors are null or not orthogonal
          */
         public Builder setDirection(Vector toDirection, Vector upDirection){
@@ -107,7 +139,7 @@ public class Camera implements Cloneable {
          *set the size of the view plane
          * @param width the width of the view plane
          * @param height the height of the view plane
-         * @return the current builder camera
+         * @return the current camera object
          * @throws IllegalArgumentException if the width or height are not positive
          */
         public Builder setVpSize(double width, double height){
@@ -122,7 +154,7 @@ public class Camera implements Cloneable {
         /**
          *set the view plane distance
          * @param distance the view plane distance
-         * @return the current builder camera
+         * @return the current camera object
          * @throws IllegalArgumentException if the distance is negative
          */
         public Builder setVpDistance(double distance){
@@ -133,6 +165,17 @@ public class Camera implements Cloneable {
             return this;
         }
 
+        /**
+         * Builds and validates a complete Camera object, ensuring all necessary data is present and adheres to constraints.
+         *
+         * @return A new, validated Camera instance.
+         * @throws MissingResourceException If any of the following camera properties are missing:
+         *                                  - `position`
+         *                                  - `toDirection`
+         *                                  - `upDirection`
+         * @throws IllegalStateException If either viewport height, width, or distance is non-positive.
+         * @throws IllegalArgumentException If `toDirection` and `upDirection` are not orthogonal (i.e., not perpendicular).
+         */
         public Camera build(){
             final String masseg = "Missing rendering data";
             if(camera.position == null)
@@ -154,16 +197,8 @@ public class Camera implements Cloneable {
             try{
                 return (Camera) camera.clone();
             }catch (CloneNotSupportedException e){
-                throw new AssertionError();
+                throw new AssertionError(e);
             }
         }
-
     }
-
-
-
-
-
-
-
 }
