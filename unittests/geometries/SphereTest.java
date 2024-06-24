@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SphereTest {
 
     /**
-     * Test method for
+     * Test method for normal
      * {@link Sphere#getNormal(Point)}.
      */
     @Test
