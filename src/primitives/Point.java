@@ -4,6 +4,7 @@ import java.util.Objects;
 
 /**
  * Represents a point in three-dimensional space.
+ *
  * @author Eti Kenig and Gitty Shapira
  */
 public class Point {
@@ -103,8 +104,8 @@ public class Point {
                 "xyz=" + xyz +
                 '}';
     }
+
     /**
-     *
      * @return the value of x-axis
      */
     public double getX() {
@@ -112,7 +113,6 @@ public class Point {
     }
 
     /**
-     *
      * @return the value of y-axis
      */
     public double getY() {
@@ -120,7 +120,6 @@ public class Point {
     }
 
     /**
-     *
      * @return the value of z-axis
      */
     public double getZ() {

@@ -1,14 +1,14 @@
 package geometries;
 
 import org.junit.jupiter.api.Test;
-import primitives.*;
+import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
-import java.util.Comparator;
 
-import java.util.*;
+import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Testing Spheres
@@ -16,6 +16,10 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Gitty Shapira and Eti Kenig
  */
 class SphereTest {
+
+    private final Point p001 = new Point(0, 0, 1);
+    private final Point p100 = new Point(1, 0, 0);
+    private final Vector v001 = new Vector(0, 0, 1);
 
     /**
      * Test method for normal
@@ -32,17 +36,14 @@ class SphereTest {
         );
     }
 
-    private final Point p001 = new Point(0, 0, 1);
-    private final Point p100 = new Point(1, 0, 0);
-    private final Vector v001 = new Vector(0, 0, 1);
     /**
      * Test method for
-     * {@link geometries.Sphere#findIntersections(primitives.Ray)}.
+     * {@link Intersectable#findIntersections(Ray)}.
      */
     @Test
     public void testFindIntersections() {
 
-        Sphere sphere = new Sphere(new Point (1, 0, 0), 1d);
+        Sphere sphere = new Sphere(new Point(1, 0, 0), 1d);
         Point p1 = new Point(0.0651530771650466, 0.355051025721682, 0);
         Point p2 = new Point(1.53484692283495, 0.844948974278318, 0);
 

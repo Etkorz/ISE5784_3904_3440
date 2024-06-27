@@ -4,7 +4,9 @@ import primitives.Color;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
+
 import java.util.MissingResourceException;
+
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
@@ -29,7 +31,7 @@ public class Camera implements Cloneable {
     private Vector toDirection;
 
     //parameters of the view Plane
-    private double vpHeigth = 0.0;
+    private double vpHeight = 0.0;
     private double vpWidth = 0.0;
     private double vpDistance = 0.0;
 
@@ -41,24 +43,26 @@ public class Camera implements Cloneable {
     /**
      * private constructor
      */
-    private Camera(){}
+    private Camera() {
+    }
 
     /**
      * Returns a new builder instance for creating a `Camera` object.
+     *
      * @return A new `Builder` instance to configure and build a `Camera`.
      */
-    public static Builder getBuilder(){
+    public static Builder getBuilder() {
         return new Builder();
     }
 
     /**
-     *  goes over all the pixels and color them according to the scene
+     * goes over all the pixels and color them according to the scene
      */
     public Camera renderImage() {
         // throw new UnsupportedOperationException();
 //        int Nx = imageWriter.getNx();
 //        int Ny = imageWriter.getNy();
-        for (int i=0; i< imageWriter.getNx(); i++) {
+        for (int i = 0; i < imageWriter.getNx(); i++) {
             for (int j = 0; j < imageWriter.getNy(); j++)
                 castRay(imageWriter.getNx(), imageWriter.getNy(), i, j);
         }
@@ -73,13 +77,13 @@ public class Camera implements Cloneable {
      * @param nY the number of pixels along the height of the image plane
      * @param j  the horizontal index of the pixel being casted
      * @param i  the vertical index of the pixel being casted
-     * @return the color of the closest intersected geometry, if any
      * @param nX
      * @param nY
      * @param j
      * @param i
+     * @return the color of the closest intersected geometry, if any
      */
-    private void castRay(int nX, int nY, int j, int i){
+    private void castRay(int nX, int nY, int j, int i) {
         Ray ray = constructRay(nX, nY, j, i);  // casting a ray through pixel
         Color color = rayTracer.traceRay(ray); // finding the color of the point where the ray is intersected
         imageWriter.writePixel(j, i, color);   // coloring the pixel in the image
@@ -96,7 +100,7 @@ public class Camera implements Cloneable {
      * print a grid of interval * interval pixels squares
      *
      * @param interval size of grid
-     * @param color of grid
+     * @param color    of grid
      * @return this
      */
     public Camera printGrid(int interval, Color color) {
@@ -114,17 +118,17 @@ public class Camera implements Cloneable {
      *
      * @param nX The number of pixels in the horizontal direction (width).
      * @param nY The number of pixels in the vertical direction (height).
-     * @param j The horizontal pixel index (column index, 0-based).
-     * @param i The vertical pixel index (row index, 0-based).
+     * @param j  The horizontal pixel index (column index, 0-based).
+     * @param i  The vertical pixel index (row index, 0-based).
      * @return A new Ray object representing the ray originating from the camera's position and passing through the specified pixel.
      * @throws IllegalArgumentException If either `nX` or `nY` is zero (division by zero would occur).
      */
-    public Ray constructRay(int nX, int nY, int j, int i){
+    public Ray constructRay(int nX, int nY, int j, int i) {
         if (nY == 0 || nX == 0) {
             throw new IllegalArgumentException("It is impossible to divide by 0");
         }
         Point Pc = position.add(toDirection.scale(vpDistance));
-        double Ry = vpHeigth / nY;
+        double Ry = vpHeight / nY;
         double Rx = vpWidth / nX;
 
         double Yi = -1 * (i - (nY - 1) / 2.0) * Ry;
@@ -146,34 +150,36 @@ public class Camera implements Cloneable {
     /**
      * Builder class for the camera, inside class
      */
-    public static class Builder{
+    public static class Builder {
         private final Camera camera;
 
         /**
          * Empty constructor build camera from new object
          */
-        public Builder(){
+        public Builder() {
             camera = new Camera();
         }
 
         /**
          * Constructor to build camera from giving camera
+         *
          * @param camera the given one
          */
-        public Builder(Camera camera){
+        public Builder(Camera camera) {
             this.camera = camera;
         }
 
         /**
          * set the position of the camera
+         *
          * @param location the position to set the camera
          * @return the current camera object
          * @throws IllegalArgumentException if the given location is null
          */
-        public Builder setLocation(Point location){
-            if(location == null)
+        public Builder setLocation(Point location) {
+            if (location == null)
                 throw new IllegalArgumentException("camera position cannot be null");
-            camera.position=location;
+            camera.position = location;
             return this;
         }
 
@@ -185,32 +191,32 @@ public class Camera implements Cloneable {
          * @return the current camera object
          * @throws IllegalArgumentException if the vectors are null or not orthogonal
          */
-        public Builder setDirection(Vector toDirection, Vector upDirection){
-            if(toDirection == null || upDirection == null)
+        public Builder setDirection(Vector toDirection, Vector upDirection) {
+            if (toDirection == null || upDirection == null)
                 throw new IllegalArgumentException("camera direction vectors cannot be null");
-            if(!isZero(toDirection.dotProduct(upDirection)))
+            if (!isZero(toDirection.dotProduct(upDirection)))
                 throw new IllegalArgumentException("direction vectors must be orthogonal");
 
-            camera.upDirection=upDirection.normalize();
-            camera.toDirection=toDirection.normalize();
-            camera.rightDirection=toDirection.crossProduct(upDirection).normalize();
+            camera.upDirection = upDirection.normalize();
+            camera.toDirection = toDirection.normalize();
+            camera.rightDirection = toDirection.crossProduct(upDirection).normalize();
             return this;
         }
 
         /**
          * set the size of the view plane
          *
-         * @param width the width of the view plane
+         * @param width  the width of the view plane
          * @param height the height of the view plane
          * @return the current camera object
          * @throws IllegalArgumentException if the width or height are not positive
          */
-        public Builder setVpSize(double width, double height){
-            if(alignZero(width) <= 0 || alignZero(height) <= 0)
+        public Builder setVpSize(double width, double height) {
+            if (alignZero(width) <= 0 || alignZero(height) <= 0)
                 throw new IllegalArgumentException("view plane width or height must be positive");
 
-            camera.vpWidth=width;
-            camera.vpHeigth=height;
+            camera.vpWidth = width;
+            camera.vpHeight = height;
             return this;
         }
 
@@ -221,30 +227,32 @@ public class Camera implements Cloneable {
          * @return the current camera object
          * @throws IllegalArgumentException if the distance is negative
          */
-        public Builder setVpDistance(double distance){
-            if(alignZero(distance) <= 0.0)
+        public Builder setVpDistance(double distance) {
+            if (alignZero(distance) <= 0.0)
                 throw new IllegalArgumentException("view plane distance cannot be negative");
 
-            camera.vpDistance=distance;
+            camera.vpDistance = distance;
             return this;
         }
 
         /**
          * Sets the RayTracerBase of the Camera
+         *
          * @param rayTracer rayTracer
          * @return this
          */
-        public Builder setRayTracer(RayTracerBase rayTracer){
+        public Builder setRayTracer(RayTracerBase rayTracer) {
             camera.rayTracer = rayTracer;
             return this;
         }
 
         /**
          * sets the ImageWriter of the Camera
+         *
          * @param imageWriter imageWriter
          * @return this
          */
-        public Builder setImageWriter(ImageWriter imageWriter){
+        public Builder setImageWriter(ImageWriter imageWriter) {
             camera.imageWriter = imageWriter;
             return this;
         }
@@ -257,36 +265,35 @@ public class Camera implements Cloneable {
          *                                  - `position`
          *                                  - `toDirection`
          *                                  - `upDirection`
-         * @throws IllegalStateException If either viewport height, width, or distance is non-positive.
+         * @throws IllegalStateException    If either viewport height, width, or distance is non-positive.
          * @throws IllegalArgumentException If `toDirection` and `upDirection` are not orthogonal (i.e., not perpendicular).
          */
-        public Camera build(){
-            final String masseg = "Missing rendering data";
-            if(camera.position == null)
-                throw new MissingResourceException(masseg, Camera.class.getName(), "position");
-            if(camera.toDirection == null)
-                throw new MissingResourceException(masseg, Camera.class.getName(), "toDirection");
-            if(camera.upDirection == null)
-                throw new MissingResourceException(masseg, Camera.class.getName(), "upDirection");
-            if(alignZero(camera.vpHeigth)<=0)
+        public Camera build() {
+            final String massege = "Missing rendering data";
+            if (camera.position == null)
+                throw new MissingResourceException(massege, Camera.class.getName(), "position");
+            if (camera.toDirection == null)
+                throw new MissingResourceException(massege, Camera.class.getName(), "toDirection");
+            if (camera.upDirection == null)
+                throw new MissingResourceException(massege, Camera.class.getName(), "upDirection");
+            if (alignZero(camera.vpHeight) <= 0)
                 throw new IllegalStateException("heigth must be positive");
-            if(alignZero(camera.vpWidth)<=0)
+            if (alignZero(camera.vpWidth) <= 0)
                 throw new IllegalStateException("width must be positive");
-            if(alignZero(camera.vpDistance)<=0)
+            if (alignZero(camera.vpDistance) <= 0)
                 throw new IllegalStateException("distance must be positive");
-            if(!isZero(camera.toDirection.dotProduct(camera.upDirection)))
+            if (!isZero(camera.toDirection.dotProduct(camera.upDirection)))
                 throw new IllegalArgumentException("direction vectors must be orthogonal");
-            if(camera.rightDirection == null)
-                camera.rightDirection=camera.toDirection.crossProduct(camera.upDirection).normalize();
+            if (camera.rightDirection == null)
+                camera.rightDirection = camera.toDirection.crossProduct(camera.upDirection).normalize();
 //            if (camera.imageWriter ==null)
-//                throw new MissingResourceException(masseg, Camera.class.getName(), "imageWriter");
+//                throw new MissingResourceException(massege, Camera.class.getName(), "imageWriter");
 //            if (camera.rayTracer==null)
-//                throw new MissingResourceException(masseg, Camera.class.getName(), "rayTracer");
-            try{
+//                throw new MissingResourceException(massege, Camera.class.getName(), "rayTracer");
+            try {
 
                 return (Camera) camera.clone();
-            }
-            catch (CloneNotSupportedException e){
+            } catch (CloneNotSupportedException e) {
                 throw new AssertionError(e);
             }
         }

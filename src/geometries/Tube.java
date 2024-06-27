@@ -1,4 +1,5 @@
 package geometries;
+
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
@@ -10,14 +11,16 @@ import static primitives.Util.isZero;
 /**
  * Tube class represents three-dimensional Tube in 3D Cartesian coordinate
  * system
+ *
  * @author Eti Kenig and Gitty Shapira
  */
-public class Tube extends RadialGeometry{
+public class Tube extends RadialGeometry {
     final Ray axis;
 
     /**
      * constructor
-     * @param axis ray
+     *
+     * @param axis   ray
      * @param radius radius
      */
     public Tube(Ray axis, double radius) {
@@ -27,20 +30,20 @@ public class Tube extends RadialGeometry{
 
     @Override
     public Vector getNormal(Point point) {
-        Vector v=axis.getDirection();
-        Point p0=axis.getHead();
+        Vector v = axis.getDirection();
+        Point p0 = axis.getHead();
 
         //if vector between p0 to point is orthogonal to v(axis direction)
-        if(!isZero(point.subtract(p0).dotProduct(v))){
-            double t=v.dotProduct(point.subtract(p0));
-            p0=p0.add(v.scale(t));
+        if (!isZero(point.subtract(p0).dotProduct(v))) {
+            double t = v.dotProduct(point.subtract(p0));
+            p0 = p0.add(v.scale(t));
         }
 
         return point.subtract(p0).normalize();
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
         return List.of();
     }
 }

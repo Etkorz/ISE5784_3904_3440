@@ -2,6 +2,7 @@ package primitives;
 
 /**
  * Represents a vector in three-dimensional space.
+ *
  * @author Eti Kenig and Gitty Shapira
  */
 public class Vector extends Point {
@@ -122,6 +123,7 @@ public class Vector extends Point {
                 "xyz=" + xyz +
                 '}';
     }
+
     @Override
     public boolean equals(Object o) {
         return super.equals(o);

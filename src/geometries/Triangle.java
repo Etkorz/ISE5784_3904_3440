@@ -7,6 +7,7 @@ import primitives.Vector;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import static primitives.Util.isZero;
 
 public class Triangle extends Polygon {
@@ -22,14 +23,15 @@ public class Triangle extends Polygon {
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
 
         // find intersection of triangle with plane
         List<Point> intersections = plane.findIntersections(ray);
 
         //if there are no intersection- return null
-        if (intersections==null)
+        if (intersections == null)
             return null;
+
 
         //get the head and direction of ray
         Point p0 = ray.getHead();
@@ -50,6 +52,13 @@ public class Triangle extends Polygon {
             return null;
 
         // if ALL the products are positive or ALL the products are negatives the point is inside the triangle
-        return ((nv1 > 0 && nv2 > 0 && nv3 > 0) || (nv1 < 0 && nv2 < 0 && nv3 < 0)) ? intersections : null;
+         if((nv1 > 0 && nv2 > 0 && nv3 > 0) || (nv1 < 0 && nv2 < 0 && nv3 < 0)){
+             List<GeoPoint> result = plane.findGeoIntersectionsHelper(ray);
+             for(GeoPoint geoPoint : result){
+                 geoPoint.geometry=this;
+             }
+             return result;
+         }else
+             return null;
     }
 }

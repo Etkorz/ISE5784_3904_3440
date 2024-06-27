@@ -2,10 +2,15 @@ package primitives;
 
 import java.util.List;
 import java.util.Objects;
+
 import static primitives.Util.isZero;
+
+import geometries.Intersectable.GeoPoint;
+
 
 /**
  * Represents a ray in three-dimensional space, defined by a starting point (head) and a direction vector.
+ *
  * @author Eti Kenig and Gitty Shapira
  */
 public class Ray {
@@ -51,6 +56,7 @@ public class Ray {
 
     /**
      * getter
+     *
      * @return direction of ray
      */
     public Vector getDirection() {
@@ -59,43 +65,42 @@ public class Ray {
 
     /**
      * getter
+     *
      * @return head the base point of ray
      */
     public Point getHead() {
         return head;
     }
 
-    public Point getPoint(double t){
-        if(isZero(t))
+    public Point getPoint(double t) {
+        if (isZero(t))
             return head;
         return head.add(direction.scale(t));
 
     }
 
     /**
-     *  finds the closest point to ray's base point.
+     * finds the closest point to ray's base point.
      *
      * @param points
      * @return
      */
     public Point findClosestPoint(List<Point> points) {
-        // the list is empty
-        if(points == null || points.size()==0)
+        return points == null || points.isEmpty() ? null
+                : findClosestGeoPoint(points.stream().map(p -> new GeoPoint(p,null)).toList()).point;
+    }
+
+    public GeoPoint findClosestGeoPoint(List<GeoPoint> points) {
+        GeoPoint closest = null;
+        double closestDistance = Integer.MAX_VALUE;
+        if (points == null || points.isEmpty())
             return null;
-
-        // initialize as if the first point's is the closest
-        Point closest = points.get(0);
-        double minDistance = head.distance(closest);
-        double distance;
-
-        // run across the list of points
-        for (int i=1; i< points.size(); i++) {
-
-            distance = head.distance(points.get(i));
-            if (distance < minDistance)
-                closest = points.get(i);
+        for (GeoPoint point : points) {
+            if (point.point.distanceSquared(head) < closestDistance) {
+                closest = point;
+                closestDistance = point.point.distanceSquared(head);
+            }
         }
-
         return closest;
     }
 }

@@ -2,12 +2,12 @@ package primitives;
 
 import org.junit.jupiter.api.Test;
 
-import static java.lang.System.out;
-import static org.junit.jupiter.api.Assertions.*;
-import static primitives.Util.isZero;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- *  Unit tests for primitives.Point class
+ * Unit tests for primitives.Point class
+ *
  * @author Eti and Gitty
  */
 
@@ -26,7 +26,7 @@ class PointTest {
         // ============ Equivalence Partitions Tests ==============
         //TC01 check subtraction
         assertEquals(
-                new Vector(1,2,3),
+                new Vector(1, 2, 3),
                 p2.subtract(p1),
                 "ERROR: (point2 - point1) does not work correctly"
         );
@@ -34,7 +34,7 @@ class PointTest {
         //TC02 subtract the same point
         assertThrows(
                 IllegalArgumentException.class,
-                ()->p1.subtract(p1),
+                () -> p1.subtract(p1),
                 "ERROR: (point - itself) does not throw an exception"
         );
 
@@ -45,12 +45,12 @@ class PointTest {
      */
     @Test
     void testAdd() {
-        Vector v1 = new Vector(1,2,3);
+        Vector v1 = new Vector(1, 2, 3);
         Vector v2 = new Vector(-1, -2, -3);
         // ============ Equivalence Partitions Tests ==============
-        assertEquals(p2, p1.add(v1),"ERROR: (point + vector) = other point does not work correctly");
+        assertEquals(p2, p1.add(v1), "ERROR: (point + vector) = other point does not work correctly");
         // =============== Boundary Values Tests ==================
-        assertEquals(Point.ZERO, p1.add(v2),"ERROR: (point + vector) = center of coordinates does not work correctly");
+        assertEquals(Point.ZERO, p1.add(v2), "ERROR: (point + vector) = center of coordinates does not work correctly");
 
     }
 
@@ -60,7 +60,7 @@ class PointTest {
     @Test
     void testDistance() {
         // ============ Equivalence Partitions Tests ==============
-        assertEquals(3,p1.distance(p3), DELTA, "ERROR: distance is wrong");
+        assertEquals(3, p1.distance(p3), DELTA, "ERROR: distance is wrong");
     }
 
     /**
@@ -69,7 +69,7 @@ class PointTest {
     @Test
     void testDistanceSquared() {
         // ============ Equivalence Partitions Tests ==============
-        assertEquals (9,
+        assertEquals(9,
                 p1.distanceSquared(p3),
                 DELTA,
                 "ERROR: squared distance between points is wrong");

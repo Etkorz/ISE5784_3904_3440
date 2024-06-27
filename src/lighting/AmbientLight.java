@@ -3,19 +3,19 @@ package lighting;
 import primitives.Color;
 import primitives.Double3;
 
-public class AmbientLight {
-
-    private final Color intensity;
+public class AmbientLight extends Light{
 
     public static AmbientLight NONE = new AmbientLight(Color.BLACK, Double3.ZERO);
 
-    public AmbientLight(Color ia, Double3 ka){
-        this.intensity = ia.scale(ka);
+    /**
+     * Constructs an `AmbientLight` object with the specified color and attenuation factor.
+     *
+     * @param ia The ambient light color.
+     * @param ka The ambient light attenuation factor.
+     */
+    public AmbientLight(Color ia, Double3 ka) {
+
+        super(ia.scale(ka));
     }
 
-    public AmbientLight(Color ia, Double ka){
-        this.intensity = ia.scale(ka);
-    }
-
-    public Color getIntensity(){ return this.intensity; }
 }
