@@ -2,6 +2,8 @@ package primitives;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class RayTest {
@@ -25,5 +27,39 @@ class RayTest {
         Ray rayZero = new Ray(new Point(2, 2, 2), new Vector(1, 0, 0));
         Point pointZero = rayZero.getPoint(0);
         assertEquals(new Point(2, 2, 2), pointZero, "Zero distance test failed");
+    }
+
+    @Test
+    void testFindClosestPoint() {
+        Ray ray = new Ray(new Point(-1, 0, 0), new Vector(0, 0, 2));
+
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: The closest Point is in the middle of the list
+        assertEquals(new Point(-1, 0, 1),
+                ray.findClosestPoint(
+                        List.of(new Point(-1, 0, 3),
+                                new Point(-1, 0, 1),
+                                new Point(-1, 0, 5))),
+                "failed to find the closest point");
+
+        // =============== Boundary Values Tests ==================
+        // TC02: Empty List
+        assertNull(ray.findClosestPoint(List.of()));
+
+        // TC03: The first Point in the list is the closest
+        assertEquals(new Point(-1, 0, 1),
+                ray.findClosestPoint(
+                        List.of(new Point(-1, 0, 1),
+                                new Point(-1, 0, 3),
+                                new Point(-1, 0, 5))),
+                "failed to recognize the first Point as the closest");
+
+        // TC04: The last Point in the list is the closest
+        assertEquals(new Point(-1, 0, 1),
+                ray.findClosestPoint(
+                        List.of(new Point(-1, 0, 3),
+                                new Point(-1, 0, 5),
+                                new Point(-1, 0, 1))),
+                "failed to recognize the last Point as the closest");
     }
 }
