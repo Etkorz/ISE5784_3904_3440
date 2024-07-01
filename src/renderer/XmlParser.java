@@ -1,15 +1,31 @@
 package renderer;
+
+import geometries.Geometries;
+import geometries.Sphere;
+import geometries.Triangle;
 import lighting.AmbientLight;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
-import javax.xml.parsers.*;
-import java.io.*;
-import geometries.*;
-import primitives.*;
+import primitives.Color;
+import primitives.Double3;
+import primitives.Point;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
 
 public class XmlParser {
     String filePath;
     Element root;
+
+    public XmlParser(String name) {
+        this.filePath = name;
+        this.root = getRoot();
+    }
 
     public Color getBackgroundColor() {
         return xmlToColor("background-color", root);
@@ -28,11 +44,6 @@ public class XmlParser {
         Node geometriesNode = root.getElementsByTagName("geometries").item(0);
         parseGeometries(geometries, geometriesNode);
         return geometries;
-    }
-
-    public XmlParser(String name) {
-        this.filePath = name;
-        this.root = getRoot();
     }
 
     Element getRoot() {
