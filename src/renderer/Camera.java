@@ -286,10 +286,10 @@ public class Camera implements Cloneable {
                 throw new IllegalArgumentException("direction vectors must be orthogonal");
             if (camera.rightDirection == null)
                 camera.rightDirection = camera.toDirection.crossProduct(camera.upDirection).normalize();
-//            if (camera.imageWriter ==null)
-//                throw new MissingResourceException(massege, Camera.class.getName(), "imageWriter");
-//            if (camera.rayTracer==null)
-//                throw new MissingResourceException(massege, Camera.class.getName(), "rayTracer");
+            if (this.camera.imageWriter ==null)
+                throw new MissingResourceException(massege, Camera.class.getName(), "imageWriter");
+            if (this.camera.rayTracer==null)
+                throw new MissingResourceException(massege, Camera.class.getName(), "rayTracer");
             try {
 
                 return (Camera) camera.clone();

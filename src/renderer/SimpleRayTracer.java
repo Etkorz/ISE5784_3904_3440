@@ -48,6 +48,5 @@ public class SimpleRayTracer extends RayTracerBase {
         return scene.ambientLight.getIntensity()
                 .add(gp.geometry.getEmission());
     }
-
-
 }
+
