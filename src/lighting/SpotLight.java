@@ -9,7 +9,7 @@ import static primitives.Util.alignZero;
 public class SpotLight extends PointLight{
 
 
-    private Vector direction;
+    private final Vector direction;
 
     /**
      * Constructs a `SpotLight` object with the specified intensity, position, and direction.
@@ -24,7 +24,7 @@ public class SpotLight extends PointLight{
      */
     public SpotLight(Color intensity, Point position, Vector direction) {
         super(intensity, position);
-        this.direction = direction;
+        this.direction = direction.normalize();
     }
 
     /**
@@ -68,6 +68,12 @@ public class SpotLight extends PointLight{
      */
     @Override
     public Color getIntensity(Point p) {
-        return super.getIntensity(p).scale(Math.max(0, direction.dotProduct(getL(p))));
+       return super.getIntensity(p).scale(Math.max(0, direction.dotProduct(getL(p))));
+
+    }
+
+    @Override
+    public Vector getL(Point p) {
+        return super.getL(p).normalize(); // Returns the direction from the point to the light source
     }
 }

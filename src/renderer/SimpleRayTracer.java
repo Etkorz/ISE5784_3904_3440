@@ -39,7 +39,7 @@ public class SimpleRayTracer extends RayTracerBase {
      * @return the ambient light color
      */
     private Color calcColor(GeoPoint point, Ray ray) {
-        return calcLocalEffects(point, ray).add(super.scene.ambientLight.getIntensity());
+        return calcLocalEffects(point, ray).add(scene.ambientLight.getIntensity());
     }
     private Color calcLocalEffects(GeoPoint geoPoint, Ray ray) {
         Color color = geoPoint.geometry.getEmission();
@@ -54,9 +54,9 @@ public class SimpleRayTracer extends RayTracerBase {
             double nl = alignZero(n.dotProduct(l));
             if (nl * nv > 0) {
                 Color iL = lightSource.getIntensity(geoPoint.point);
-                Color calcDiffusive = calcDiffusive(material, nl,iL);
-                Color calcSpecular = calcSpecular(material, n, l, nl, v, iL);
-                color = color.add(calcDiffusive, calcSpecular);
+                Double3 diffusive = calcDiffuse(material, nl);
+                Double3 specular = calcSpecular(material, n, l, nl, v);
+                color = color.add(iL.scale(diffusive), iL.scale(specular));
             }
 
         }
@@ -64,38 +64,40 @@ public class SimpleRayTracer extends RayTracerBase {
     }
 
     /**
-     * Calculation of specular light component
+     * Calculates the specular reflection component for a given material, surface normal, light vector, view vector, and the dot product of the surface normal and light vector.
      *
-     * @param material Attenuation coefficient for specular light component
-     * @param n        normal to point
-     * @param l        direction vector from light to point
-     * @param v        direction of ray shot to point
-     * @param intensity
-     * @return Color of specular light component
+     * @param material The material of the surface.
+     * @param n        The surface normal.
+     * @param l        The light vector.
+     * @param nl       The dot product of the surface normal and light vector.
+     * @param v        The view vector.
+     * @return The specular reflection component.
      */
-    private Color calcSpecular(Material material, Vector n, Vector l, double nl, Vector v, Color intensity) {
-        Vector r = l.add(n.scale(-2 * nl));
-        double minusVR = -alignZero(r.dotProduct(v));
-        if (minusVR <= 0)
-            return Color.BLACK; // view from direction opposite to r vector
-//        double pow;
-//        pow = Math.pow(minusVR);
-        Double3 amount;
-        amount = material.kS.scale(Math.pow(minusVR,2));
-        return intensity.scale(amount);
+    private Double3 calcSpecular(Material material, Vector n, Vector l, double nl, Vector v) {
+        // Calculate the reflection vector using the formula: r = l - 2 * (nl * n)
+        Vector r = l.subtract(n.scale(2 * nl));
+
+        // Compute the dot product between the view vector and the reflection vector
+        double minusVR = v.dotProduct(r) * -1;
+
+        // Apply the specular reflection coefficient and shininess to the dot product
+        double max = Math.max(0, minusVR);
+
+        // Calculate the specular reflection component using the formula: kS * (max ^ nShininess)
+        return material.kS.scale(Math.pow(max, material.shininess));
+    }
+    /**
+     * Calculates the diffuse reflection component for a given material
+     * and the dot product of the surface normal and light vector.
+     *
+     * @param material The material of the surface.
+     * @param nl       The dot product of the surface normal and light vector.
+     * @return The diffuse reflection component.
+     */
+    private Double3 calcDiffuse(Material material, double nl) {
+        // Diffuse reflection is determined by scaling the diffuse coefficient with the
+        // absolute value of the dot product of the surface normal and light vector
+        return material.kD.scale(Math.abs(nl));
     }
 
-    /**
-     * Calculation of diffusion light component
-     *
-     * @param material normal to point
-     * @param nl       dot product between n-normal to point and l-direction vector from light to point
-     * @param intensity
-     * @return Color of diffusion light component
-     */
-    private Color calcDiffusive(Material material, double nl, Color intensity) {
-        double abs = Math.abs(nl);
-        Double3 scale = material.kD.scale(abs);
-        return intensity.scale(scale);
-    }
 }

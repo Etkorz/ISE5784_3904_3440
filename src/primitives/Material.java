@@ -13,9 +13,7 @@ public class Material {
     }
 
     public Material setkD(Double kD) {
-        this.kD =new Double3(kD);
-        return this;
-    }
+        return setkD(new Double3(kD));}
 
     public Material setkS(Double3 kS) {
         this.kS = kS;
@@ -23,8 +21,7 @@ public class Material {
     }
 
     public Material setkS(Double kS) {
-        this.kS = new Double3(kS);
-        return this;
+        return setkS(new Double3(kS));
     }
 
     public Material setShininess(int shininess) {
