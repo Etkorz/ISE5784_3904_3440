@@ -167,28 +167,33 @@ public class LightTest {
                 .writeToImage();
     }
 
-    /** Produce a picture of a sphere lighted by a narrow spotlight */
+    /**
+     * Produce a picture of a sphere lighted by a multiple lights
+     */
     @Test
-    public void sphereSpotSharp() {
+    public void sphereMultipleLight() {
         scene1.geometries.add(sphere);
-        scene1.lights
-                .add(new SpotLight(sphereLightColor, sphereLightPosition, new Vector(1, 1, -0.5))
-                        .setkL(0.001).setkQ(0.00004));
+        scene1.lights.add(new DirectionalLight(new Color(750, 204, 184),new Vector(65,70,50)));
+        scene1.lights.add(new PointLight(new Color(400, 500, 55),new Point(80,-100,46.19832)));
+        scene1.lights.add(new SpotLight(new Color(600, 320, 88), new Point(-10.20919,73.13427,-20),new Vector(-7,-45,61)));
 
-        camera1.setImageWriter(new ImageWriter("lightSphereSpotSharp", 500, 500))
+        camera1.setImageWriter(new ImageWriter("sphereMultipleLight", 500, 500))
                 .build()
                 .renderImage()
                 .writeToImage();
     }
 
-    /** Produce a picture of two triangles lighted by a narrow spotlight */
+    /**
+     *Produce a picture of two triangles lighted by a multiple lights
+     */
     @Test
-    public void trianglesSpotSharp() {
+    public void trianglesMultipleLight() {
         scene2.geometries.add(triangle1, triangle2);
-        scene2.lights.add(new SpotLight(trianglesLightColor, trianglesLightPosition, trianglesLightDirection)
-                .setkL(0.001).setkQ(0.00004));
+        scene2.lights.add(new DirectionalLight(new Color(600, 576, 805),new Vector(-65,-70,-50)));
+        scene2.lights.add(new PointLight(new Color(588, 7, 305),new Point(80,-100,-46.19832)));
+        scene2.lights.add(new SpotLight(new Color(320, 400, 108), new Point(-10.20919,-73.13427,-20),new Vector(-7,45,61)));
 
-        camera2.setImageWriter(new ImageWriter("lightTrianglesSpotSharp", 500, 500))
+        camera2.setImageWriter(new ImageWriter("trianglesMultipleLight", 500, 500))
                 .build()
                 .renderImage()
                 .writeToImage();
