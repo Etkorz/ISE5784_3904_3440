@@ -97,9 +97,9 @@ class IntegrationTest {
         pointsIntersections = new ArrayList<>();
         Camera camera = cameraBuilder.build();
 
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                Ray ray = camera.constructRay(nX, nY, j, i);
+        for (int i = 0; i < nX; i++) {
+            for (int j = 0; j < nY; j++) {
+                Ray ray = camera.constructRay(nX, nY, i, j);
                 List<Point> intersections = geometry.findIntersections(ray);
                 if (intersections != null) {
                     pointsIntersections.addAll(intersections);

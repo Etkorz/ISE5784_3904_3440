@@ -8,6 +8,7 @@ import geometries.Sphere;
 import geometries.Triangle;
 import lighting.AmbientLight;
 import primitives.*;
+import renderer.*;
 import scene.Scene;
 
 /**

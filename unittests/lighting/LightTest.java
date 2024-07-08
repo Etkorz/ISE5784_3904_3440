@@ -1,4 +1,4 @@
-package renderer;
+package lighting;
 
 import static java.awt.Color.*;
 
@@ -14,24 +14,24 @@ import scene.Scene;
  * Test rendering a basic image
  * @author Dan
  */
-public class LightsTests {
-    /** First scene for some of the tests */
-    private final Scene scene1 = new Scene("Test scene");
-    /** Second scene for some of the tests */
-    private final Scene scene2 = new Scene("Test scene")
+public class LightTest {
+    /** First scene for some of tests */
+    private final Scene          scene1                  = new Scene("Test scene");
+    /** Second scene for some of tests */
+    private final Scene          scene2                  = new Scene("Test scene")
             .setAmbientLight(new AmbientLight(new Color(WHITE), new Double3(0.15)));
 
-    /** First camera builder for some of the tests */
-    private final Camera.Builder camera1 = Camera.getBuilder()
+    /** First camera builder for some of tests */
+    private final Camera.Builder camera1                 = Camera.getBuilder()
             .setRayTracer(new SimpleRayTracer(scene1))
             .setLocation(new Point(0, 0, 1000))
-            .setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
+            .setDirection(new Vector(0,0,-1), new Vector(0,1,0))
             .setVpSize(150, 150).setVpDistance(1000);
-    /** Second camera builder for some of the tests */
+    /** Second camera builder for some of tests */
     private final Camera.Builder camera2                 = Camera.getBuilder()
             .setRayTracer(new SimpleRayTracer(scene2))
             .setLocation(new Point(0, 0, 1000))
-            .setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
+            .setDirection(new Vector(0,0,-1), new Vector(0,1,0))
             .setVpSize(200, 200).setVpDistance(1000);
 
     /** Shininess value for most of the geometries in the tests */
@@ -162,6 +162,33 @@ public class LightsTests {
                 .setkL(0.001).setkQ(0.0001));
 
         camera2.setImageWriter(new ImageWriter("lightTrianglesSpot", 500, 500))
+                .build()
+                .renderImage()
+                .writeToImage();
+    }
+
+    /** Produce a picture of a sphere lighted by a narrow spotlight */
+    @Test
+    public void sphereSpotSharp() {
+        scene1.geometries.add(sphere);
+        scene1.lights
+                .add(new SpotLight(sphereLightColor, sphereLightPosition, new Vector(1, 1, -0.5))
+                        .setkL(0.001).setkQ(0.00004));
+
+        camera1.setImageWriter(new ImageWriter("lightSphereSpotSharp", 500, 500))
+                .build()
+                .renderImage()
+                .writeToImage();
+    }
+
+    /** Produce a picture of two triangles lighted by a narrow spotlight */
+    @Test
+    public void trianglesSpotSharp() {
+        scene2.geometries.add(triangle1, triangle2);
+        scene2.lights.add(new SpotLight(trianglesLightColor, trianglesLightPosition, trianglesLightDirection)
+                .setkL(0.001).setkQ(0.00004));
+
+        camera2.setImageWriter(new ImageWriter("lightTrianglesSpotSharp", 500, 500))
                 .build()
                 .renderImage()
                 .writeToImage();
