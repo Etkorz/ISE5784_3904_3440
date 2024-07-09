@@ -30,17 +30,7 @@ public class RenderTests {
      */
     @Test
     public void renderTwoColorTest() {
-        scene.geometries.add(new Sphere(new Point(0, 0, -100), 50d),
-                new Triangle(new Point(-100, 0, -100), new Point(0, 100, -100), new Point(-100, 100, -100)), // up
-                // left
-                new Triangle(new Point(-100, 0, -100), new Point(0, -100, -100),
-                        new Point(-100, -100, -100)), // down
-                // left
-                new Triangle(new Point(100, 0, -100), new Point(0, -100, -100), new Point(100, -100, -100))); // down
-        scene.setAmbientLight(new AmbientLight(new Color(255, 191, 191), Double3.ONE))
-                .setBackground(new Color(75, 127, 90));
-
-        // right
+        scene();
         camera
                 .setImageWriter(new ImageWriter("base render test", 1000, 1000))
                 .build()
@@ -80,17 +70,28 @@ public class RenderTests {
     /** Test for XML based scene - for bonus */
     @Test
     public void basicRenderXml() {
-        // enter XML file name and parse from XML file into scene object
-        // using the code you added in appropriate packages
-        // ...
-        // NB: unit tests is not the correct place to put XML parsing code
-
+        scene();
         camera
                 .setImageWriter(new ImageWriter("xml render test", 1000, 1000))
                 .build()
                 .renderImage()
                 .printGrid(100, new Color(YELLOW))
                 .writeToImage();
+    }
+
+    /**
+     * private method to create a scene of triangle and circle in the same color
+     */
+    private void scene() {
+        scene.geometries.add(new Sphere(new Point(0, 0, -100), 50d),
+                new Triangle(new Point(-100, 0, -100), new Point(0, 100, -100), new Point(-100, 100, -100)), // up
+                // left
+                new Triangle(new Point(-100, 0, -100), new Point(0, -100, -100),
+                        new Point(-100, -100, -100)), // down
+                // left
+                new Triangle(new Point(100, 0, -100), new Point(0, -100, -100), new Point(100, -100, -100))); // down
+        scene.setAmbientLight(new AmbientLight(new Color(255, 191, 191), Double3.ONE))
+                .setBackground(new Color(75, 127, 90));
     }
 }
 
