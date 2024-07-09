@@ -195,7 +195,36 @@ public class LightsTests {
                 .writeToImage();
     }
 
+    @Test
+    public void multipleLightSourcesSphere() {
+        Scene scene = new Scene("Test scene");
+        scene.setAmbientLight(new AmbientLight(new Color(pink), new Double3(0.15,0,0)));
 
+        scene.geometries.add(
+                new Sphere(new Point(0, 0, -100), 50)
+                        .setEmission(new Color(java.awt.Color.BLUE))
+                        .setMaterial(new Material().setkD(0.4).setkS(0.3).setShininess(100))
+        );
+
+        scene.lights.add(new SpotLight(new Color(300, 400, 400), new Point(-50, -50, 50), new Vector(1, 1, -2))
+                .setkL(0.0001).setkQ(0.000005));
+        scene.lights.add(new PointLight(new Color(500, 300, 0), new Point(50, 50, -50))
+                .setkL(0.0005).setkQ(0.0005));
+        scene.lights.add(new DirectionalLight(new Color(400, 300, 300), new Vector(1, 0, -1)));
+
+        ImageWriter imageWriter = new ImageWriter("sphereMultipleLights", 500, 500);
+        Camera camera = Camera.getBuilder()
+                .setLocation(new Point(0, 0, 0))
+                .setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
+                .setVpSize(150, 150)
+                .setVpDistance(100)
+                .setImageWriter(imageWriter)
+                .setRayTracer(new SimpleRayTracer(scene))
+                .build();
+
+        camera.renderImage();
+        camera.writeToImage();
+    }
 
 
     @Test
