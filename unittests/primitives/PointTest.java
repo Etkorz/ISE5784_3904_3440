@@ -37,7 +37,6 @@ class PointTest {
                 () -> p1.subtract(p1),
                 "ERROR: (point - itself) does not throw an exception"
         );
-
     }
 
     /**

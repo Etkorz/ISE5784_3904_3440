@@ -44,6 +44,15 @@ public class ImageWriter {
      */
     private Logger logger = Logger.getLogger("ImageWriter");
 
+    public ImageWriter() {
+
+        this.imageName = imageName;
+        this.nX = nX;
+        this.nY = nY;
+
+        image = new BufferedImage(nX, nY, BufferedImage.TYPE_INT_RGB);
+    }
+
     // ***************** Constructors ********************** //
 
     /**

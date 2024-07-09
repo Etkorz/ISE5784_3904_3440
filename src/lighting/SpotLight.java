@@ -72,6 +72,12 @@ public class SpotLight extends PointLight{
 
     }
 
+    /**
+     * Returns the normalized direction vector from the point `p` to the light source.
+     *
+     * @param p The point from which to calculate the direction
+     * @return The normalized direction vector
+     */
     @Override
     public Vector getL(Point p) {
         return super.getL(p).normalize(); // Returns the direction from the point to the light source
