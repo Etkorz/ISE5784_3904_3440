@@ -13,8 +13,12 @@ import java.util.List;
  * This class is an extended class of a ray tracer.
  */
 public class SimpleRayTracer extends RayTracerBase {
+
+    private static final double EPS = 0.1;
+
     /**
      * Construct
+     *
      * @param scene
      */
     public SimpleRayTracer(Scene scene) {
@@ -27,20 +31,20 @@ public class SimpleRayTracer extends RayTracerBase {
      */
     @Override
     public Color traceRay(Ray ray) {
-        List <GeoPoint> intersections = scene.geometries.findGeoIntersections(ray);
-        if(intersections == null)
+        List<GeoPoint> intersections = scene.geometries.findGeoIntersections(ray);
+        if (intersections == null)
             return scene.background;
-        return calcColor(ray.findClosestGeoPoint(intersections),ray);
+        return calcColor(ray.findClosestGeoPoint(intersections), ray);
     }
 
     /**
-     *
      * @param point - GoePoint
      * @return the ambient light color
      */
     private Color calcColor(GeoPoint point, Ray ray) {
         return calcLocalEffects(point, ray).add(scene.ambientLight.getIntensity());
     }
+
     private Color calcLocalEffects(GeoPoint geoPoint, Ray ray) {
         Color color = geoPoint.geometry.getEmission();
         Vector v = ray.getDirection();
@@ -53,10 +57,12 @@ public class SimpleRayTracer extends RayTracerBase {
             Vector l = lightSource.getL(geoPoint.point);
             double nl = alignZero(n.dotProduct(l));
             if (nl * nv > 0) {
-                Color iL = lightSource.getIntensity(geoPoint.point);
-                Double3 diffusive = calcDiffuse(material, nl);
-                Double3 specular = calcSpecular(material, n, l, nl, v);
-                color = color.add(iL.scale(diffusive), iL.scale(specular));
+                if (unshaded(geoPoint, lightSource, l, n, nl)) {
+                    Color iL = lightSource.getIntensity(geoPoint.point);
+                    Double3 diffusive = calcDiffuse(material, nl);
+                    Double3 specular = calcSpecular(material, n, l, nl, v);
+                    color = color.add(iL.scale(diffusive), iL.scale(specular));
+                }
             }
 
         }
@@ -86,6 +92,7 @@ public class SimpleRayTracer extends RayTracerBase {
         // Calculate the specular reflection component using the formula: kS * (max ^ nShininess)
         return material.kS.scale(Math.pow(max, material.shininess));
     }
+
     /**
      * Calculates the diffuse reflection component for a given material
      * and the dot product of the surface normal and light vector.
@@ -100,4 +107,26 @@ public class SimpleRayTracer extends RayTracerBase {
         return material.kD.scale(Math.abs(nl));
     }
 
+    private boolean unshaded(GeoPoint gp, LightSource light, Vector l, Vector n, double nl) {
+        Vector lightDirection = l.scale(-1); // from point to light source
+        Vector epsVector = n.scale(nl < 0 ? EPS : -EPS);
+        Point point = gp.point.add(epsVector);
+        Ray lightRay = new Ray(point, lightDirection);
+        List<Point> intersections = scene.geometries.findIntersections(lightRay);
+        if (intersections == null)
+            return true;
+
+        double lightDistance = light.getDistance(point);
+
+        for (Point intersection : intersections) {
+            if (point.distance(intersection) < lightDistance) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
+
+
+

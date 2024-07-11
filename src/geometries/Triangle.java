@@ -4,9 +4,7 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
-import java.util.ArrayList;
 import java.util.List;
-
 
 import static primitives.Util.isZero;
 
@@ -52,13 +50,13 @@ public class Triangle extends Polygon {
             return null;
 
         // if ALL the products are positive or ALL the products are negatives the point is inside the triangle
-         if((nv1 > 0 && nv2 > 0 && nv3 > 0) || (nv1 < 0 && nv2 < 0 && nv3 < 0)){
-             List<GeoPoint> result = plane.findGeoIntersectionsHelper(ray);
-             for(GeoPoint geoPoint : result){
-                 geoPoint.geometry=this;
-             }
-             return result;
-         }else
-             return null;
+        if ((nv1 > 0 && nv2 > 0 && nv3 > 0) || (nv1 < 0 && nv2 < 0 && nv3 < 0)) {
+            List<GeoPoint> result = plane.findGeoIntersectionsHelper(ray);
+            for (GeoPoint geoPoint : result) {
+                geoPoint.geometry = this;
+            }
+            return result;
+        } else
+            return null;
     }
 }

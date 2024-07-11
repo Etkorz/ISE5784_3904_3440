@@ -1,19 +1,21 @@
 package lighting;
 
-import primitives.*;
+import primitives.Color;
+import primitives.Point;
+import primitives.Vector;
 
-public class PointLight extends Light implements LightSource{
+public class PointLight extends Light implements LightSource {
 
     private final Point position;
-    private double kC=1;
-    private double kL=0;
-    private double kQ=0;
+    private double kC = 1;
+    private double kL = 0;
+    private double kQ = 0;
 
     /**
      * Constructs a `PointLight` object with the specified intensity and position.
      *
      * @param intensity The color and intensity of the light source.
-     * @param position The 3D position of the point light source in space.
+     * @param position  The 3D position of the point light source in space.
      */
     public PointLight(Color intensity, Point position) {
         super(intensity);
@@ -55,7 +57,7 @@ public class PointLight extends Light implements LightSource{
 
     /**
      * Calculates the intensity of the point light at a given point in space.
-     *
+     * <p>
      * The intensity of the light considers factors like the light's base intensity, constant attenuation,
      * linear attenuation, and quadratic attenuation.
      *
@@ -63,14 +65,14 @@ public class PointLight extends Light implements LightSource{
      * @return The color representing the light intensity at the point.
      */
     @Override
-    public Color getIntensity(Point p){
+    public Color getIntensity(Point p) {
         double d = position.distance(p);
         return intensity.scale(1d / (kC + kL * d + kQ * d * d));
     }
 
     /**
      * Calculates the direction vector from the point light source to a given point.
-     *
+     * <p>
      * This method provides the direction of the light rays emitted from the point light
      * towards the specified point in space.
      *
@@ -78,7 +80,12 @@ public class PointLight extends Light implements LightSource{
      * @return The normalized direction vector pointing from the light source to the point.
      */
     @Override
-    public Vector getL(Point p){
+    public Vector getL(Point p) {
         return p.subtract(position).normalize();
+    }
+
+    @Override
+    public double getDistance(Point p) {
+        return p.distance(this.position);
     }
 }

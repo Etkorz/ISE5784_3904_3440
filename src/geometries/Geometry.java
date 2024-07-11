@@ -12,9 +12,9 @@ import primitives.Vector;
  */
 public abstract class Geometry extends Intersectable {
 
-    protected Color emission= Color.BLACK;
+    protected Color emission = Color.BLACK;
 
-   private Material material=new Material();
+    private Material material = new Material();
 
     /**
      * @param point
@@ -32,6 +32,17 @@ public abstract class Geometry extends Intersectable {
     }
 
     /**
+     * set the emission color of the geometry
+     *
+     * @param emission the color to set the emission to
+     * @return the update emission color
+     */
+    public Geometry setEmission(Color emission) {
+        this.emission = emission;
+        return this;
+    }
+
+    /**
      * getter of the Material of the geometry
      *
      * @return the Material of the geometry
@@ -41,24 +52,13 @@ public abstract class Geometry extends Intersectable {
     }
 
     /**
-     *set the Material of the geometry
+     * set the Material of the geometry
      *
      * @param material for the geometry
      * @return the Material of the geometry
      */
     public Geometry setMaterial(Material material) {
         this.material = material;
-        return this;
-    }
-
-    /**
-     *set the emission color of the geometry
-     *
-     * @param emission the color to set the emission to
-     * @return the update emission color
-     */
-    public Geometry setEmission(Color emission) {
-        this.emission = emission;
         return this;
     }
 

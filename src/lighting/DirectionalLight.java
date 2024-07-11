@@ -1,8 +1,10 @@
 package lighting;
 
-import primitives.*;
+import primitives.Color;
+import primitives.Point;
+import primitives.Vector;
 
-public class DirectionalLight extends Light implements LightSource{
+public class DirectionalLight extends Light implements LightSource {
 
 
     private final Vector direction;
@@ -25,18 +27,25 @@ public class DirectionalLight extends Light implements LightSource{
      * @return The color representing the light intensity of the directional light.
      */
     @Override
-    public Color getIntensity(Point p){
+    public Color getIntensity(Point p) {
         return getIntensity();
     }
 
     /**
      * Returns the direction vector of the parallel light rays emitted by this directional light.
-     *
+     * <p>
      * param p The point in space (ignored for directional lights).
+     *
      * @return The normalized direction vector representing the direction of the parallel light rays.
      */
     @Override
-    public Vector getL(Point p){
+    public Vector getL(Point p) {
         return direction.normalize();
     }
+
+    @Override
+    public double getDistance(Point p) {
+        return Double.POSITIVE_INFINITY;
+    }
 }
+

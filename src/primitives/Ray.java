@@ -1,11 +1,12 @@
 package primitives;
 
+import geometries.Intersectable.GeoPoint;
+
 import java.util.List;
 import java.util.Objects;
 
+import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
-
-import geometries.Intersectable.GeoPoint;
 
 
 /**
@@ -17,6 +18,8 @@ public class Ray {
     final Point head; // Starting point of the ray
     final Vector direction; // Direction vector of the ray
 
+    private static final double DELTA = 0.1;
+
     /**
      * Constructs a Ray with the specified head point and direction vector. The direction vector is normalized.
      *
@@ -27,6 +30,27 @@ public class Ray {
         this.head = head;
         this.direction = direction.normalize();
     }
+
+
+    /**
+     * Constructs a Ray object with the given parameters.
+     * The ray is defined by a starting point (head), a direction vector, and a surface normal vector.
+     *
+     * @param head The starting point of the ray as a Point object.
+     * @param direction The direction vector of the ray as a Vector object.
+     * @param normal The surface normal vector as a Vector object.
+     */
+    public Ray(Point head, Vector direction, Vector normal) {
+
+        // Calculate the dot product between the surface normal and the direction vector of the ray
+        double nv = alignZero(normal.dotProduct(direction));
+        if(isZero(nv))
+            this.head = head;
+        else
+            this.head = head.add(normal.scale(nv > 0 ? DELTA : -DELTA));
+        this.direction= direction;
+    }
+
 
     /**
      * Checks if this Ray is equal to another object.
@@ -87,7 +111,7 @@ public class Ray {
      */
     public Point findClosestPoint(List<Point> points) {
         return points == null || points.isEmpty() ? null
-                : findClosestGeoPoint(points.stream().map(p -> new GeoPoint(p,null)).toList()).point;
+                : findClosestGeoPoint(points.stream().map(p -> new GeoPoint(p, null)).toList()).point;
     }
 
     public GeoPoint findClosestGeoPoint(List<GeoPoint> points) {

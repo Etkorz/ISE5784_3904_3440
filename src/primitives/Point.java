@@ -1,5 +1,7 @@
 package primitives;
 
+import geometries.Geometry;
+
 import java.util.Objects;
 
 /**
@@ -14,6 +16,7 @@ public class Point {
     public static final Point ZERO = new Point(Double3.ZERO);
 
     final Double3 xyz; // Coordinates of the point
+    public Geometry geometry;
 
     /**
      * Constructs a Point with the specified x, y, and z coordinates.

@@ -106,7 +106,7 @@ public class Plane extends Geometry {
         }
         double t = alignZero(numerator / nv); // t = numerator/nv
 
-        Point intersectionPoint=ray.getPoint(t);
+        Point intersectionPoint = ray.getPoint(t);
 
         // If t>0 the ray intersects the plane
         if (t > 0) {
