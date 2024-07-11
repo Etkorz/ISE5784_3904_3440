@@ -14,6 +14,7 @@ import java.util.List;
  */
 public class SimpleRayTracer extends RayTracerBase {
 
+    //Rayhead offset size for shading rays
     private static final double EPS = 0.1;
 
     /**
@@ -107,6 +108,18 @@ public class SimpleRayTracer extends RayTracerBase {
         return material.kD.scale(Math.abs(nl));
     }
 
+    /**
+     * A "non-shading" test method between a point and the light source
+     * If the list of cuts received is not empty - we will go through the list and if we come across more cuts
+     * Closer to the top of the beam than the distance between the point and the light source - we will return false
+     *
+     * @param gp the geometrical point to check for shading
+     * @param light the light source to check against
+     * @param l the vector from the point to the light source
+     * @param n the normal vector at the point
+     * @param nl the dot product of the normal vector and the light vector
+     * @return {@code true} if the point is unshaded (not in shadow), {@code false} otherwise
+     */
     private boolean unshaded(GeoPoint gp, LightSource light, Vector l, Vector n, double nl) {
         Vector lightDirection = l.scale(-1); // from point to light source
         Vector epsVector = n.scale(nl < 0 ? EPS : -EPS);
