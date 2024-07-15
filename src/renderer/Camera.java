@@ -1,9 +1,6 @@
 package renderer;
 
-import primitives.Color;
-import primitives.Point;
-import primitives.Ray;
-import primitives.Vector;
+import primitives.*;
 
 import java.util.MissingResourceException;
 
@@ -39,11 +36,22 @@ public class Camera implements Cloneable {
     private ImageWriter imageWriter;
     private RayTracerBase rayTracer;
 
+    private Point center;
+
 
     /**
      * private constructor
      */
     private Camera() {
+    }
+
+    public Camera(Point position, Vector vTo, Vector vUp) {
+        if (vTo.dotProduct(vUp) != 0)
+            throw new IllegalArgumentException("vTo and vUp must be orthogonal");
+        this.position = position;
+        this.toDirection = vTo.normalize();
+        this.upDirection = vUp.normalize();
+        this.rightDirection = this.toDirection.crossProduct(this.upDirection).normalize();
     }
 
     /**
@@ -147,12 +155,14 @@ public class Camera implements Cloneable {
     }
 
 
+
+
     /**
      * Builder class for the camera, inside class
      */
     public static class Builder {
         private final Camera camera;
-
+        private Point Pto = null;
         /**
          * Empty constructor build camera from new object
          */
@@ -200,6 +210,18 @@ public class Camera implements Cloneable {
             camera.upDirection = upDirection.normalize();
             camera.toDirection = toDirection.normalize();
             camera.rightDirection = toDirection.crossProduct(upDirection).normalize();
+            return this;
+        }
+
+        /**
+         * sets the vectors from the camera towards a given point
+         * @param Pto the direction point
+         * @param Vup the general up direction (of view plane)
+         * @return the updated builder
+         */
+        public Builder setDirection(Point Pto, Vector Vup ){
+            camera.upDirection = Vup;
+            this.Pto = Pto;
             return this;
         }
 
@@ -256,6 +278,10 @@ public class Camera implements Cloneable {
             camera.imageWriter = imageWriter;
             return this;
         }
+//        public Builder setImageWriter(ImageWriter imageWriter) {
+//            camera.imageWriter = imageWriter;
+//            return this;
+//        }
 
         /**
          * Builds and validates a complete Camera object, ensuring all necessary data is present and adheres to constraints.
@@ -269,33 +295,79 @@ public class Camera implements Cloneable {
          * @throws IllegalArgumentException If `toDirection` and `upDirection` are not orthogonal (i.e., not perpendicular).
          */
         public Camera build() {
-            final String massege = "Missing rendering data";
+            //const strings for exceptions throwing
+            final String MISSING_RENDERING_ARGUMENT = "Missing rendering argument";
+            final String CAMERA = "Camera";
+            final String MUST_BE_NORMALIZED = " must be normalized";
+            //if a field is null
             if (camera.position == null)
-                throw new MissingResourceException(massege, Camera.class.getName(), "position");
-            if (camera.toDirection == null)
-                throw new MissingResourceException(massege, Camera.class.getName(), "toDirection");
+                throw new MissingResourceException(MISSING_RENDERING_ARGUMENT,CAMERA ,"p0");
+            if (Pto == null && camera.toDirection == null)
+                throw new MissingResourceException(MISSING_RENDERING_ARGUMENT,CAMERA ,"direction (Vto or Pto)");
             if (camera.upDirection == null)
-                throw new MissingResourceException(massege, Camera.class.getName(), "upDirection");
-            if (alignZero(camera.vpHeight) <= 0)
-                throw new IllegalStateException("heigth must be positive");
-            if (alignZero(camera.vpWidth) <= 0)
-                throw new IllegalStateException("width must be positive");
-            if (alignZero(camera.vpDistance) <= 0)
-                throw new IllegalStateException("distance must be positive");
-            if (!isZero(camera.toDirection.dotProduct(camera.upDirection)))
-                throw new IllegalArgumentException("direction vectors must be orthogonal");
-            if (camera.rightDirection == null)
-                camera.rightDirection = camera.toDirection.crossProduct(camera.upDirection).normalize();
-            if (this.camera.imageWriter == null)
-                throw new MissingResourceException(massege, Camera.class.getName(), "imageWriter");
-            if (this.camera.rayTracer == null)
-                throw new MissingResourceException(massege, Camera.class.getName(), "rayTracer");
-            try {
+                throw new MissingResourceException(MISSING_RENDERING_ARGUMENT,CAMERA ,"Vup");
+            if(camera.imageWriter == null)
+                throw new MissingResourceException(MISSING_RENDERING_ARGUMENT,CAMERA,"imageWriter");
+            if(camera.rayTracer == null)
+                throw new MissingResourceException(MISSING_RENDERING_ARGUMENT,CAMERA,"rayTracer");
+            // check if Vto and Vup are orthogonal
+            if (Pto == null && !Util.isZero(camera.toDirection.dotProduct(camera.upDirection)))
+                throw new IllegalArgumentException("Vto and Vup are not orthogonal");
+            // check if Vup and Vto are normalized
+            if (Pto == null && !Util.isZero(camera.toDirection.lengthSquared()-1))
+                throw new IllegalArgumentException("Vto" + MUST_BE_NORMALIZED);
+            if (!Util.isZero(camera.upDirection.lengthSquared()-1))
+                throw new IllegalArgumentException("Vup" + MUST_BE_NORMALIZED);
+            //check if Pto equals P0
+            if(camera.position.equals(Pto))
+                throw new IllegalArgumentException("Pto must be different from P0");
+            // setting Vright and center (Vto optionally)
+            if(Pto != null)
+                camera.toDirection = Pto.subtract(camera.position).normalize();
 
+            camera.rightDirection = camera.toDirection.crossProduct(camera.upDirection);
+
+            camera.center = camera.position.add(camera.toDirection.scale(camera.vpDistance));
+            //if a field is zero
+            if(Util.isZero(camera.vpWidth))
+                throw new MissingResourceException(MISSING_RENDERING_ARGUMENT,CAMERA,"width");
+            if(Util.isZero(camera.vpHeight))
+                throw new MissingResourceException(MISSING_RENDERING_ARGUMENT,CAMERA,"height");
+            if(Util.isZero(camera.vpDistance))
+                throw new MissingResourceException(MISSING_RENDERING_ARGUMENT,CAMERA,"distance");
+            // return clone of the object
+            try {
                 return (Camera) camera.clone();
             } catch (CloneNotSupportedException e) {
-                throw new AssertionError(e);
+                throw new RuntimeException(e);
             }
+//            final String massege = "Missing rendering data";
+//            if (camera.position == null)
+//                throw new MissingResourceException(massege, Camera.class.getName(), "position");
+//            if (Pto == null && camera.toDirection == null)
+//                throw new MissingResourceException(massege, Camera.class.getName(), "toDirection or Pto");
+//            if (camera.upDirection == null)
+//                throw new MissingResourceException(massege, Camera.class.getName(), "upDirection");
+//            if (alignZero(camera.vpHeight) <= 0)
+//                throw new IllegalStateException("heigth must be positive");
+//            if (alignZero(camera.vpWidth) <= 0)
+//                throw new IllegalStateException("width must be positive");
+//            if (alignZero(camera.vpDistance) <= 0)
+//                throw new IllegalStateException("distance must be positive");
+//            if (!isZero(camera.toDirection.dotProduct(camera.upDirection)))
+//                throw new IllegalArgumentException("direction vectors must be orthogonal");
+//            if (camera.rightDirection == null)
+//                camera.rightDirection = camera.toDirection.crossProduct(camera.upDirection).normalize();
+//            if (this.camera.imageWriter == null)
+//                throw new MissingResourceException(massege, Camera.class.getName(), "imageWriter");
+//            if (this.camera.rayTracer == null)
+//                throw new MissingResourceException(massege, Camera.class.getName(), "rayTracer");
+//            try {
+//
+//                return (Camera) camera.clone();
+//            } catch (CloneNotSupportedException e) {
+//                throw new AssertionError(e);
+        //   }
         }
     }
 }

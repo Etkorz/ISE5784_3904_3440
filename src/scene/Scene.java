@@ -48,4 +48,24 @@ public class Scene {
         this.lights = lights;
         return this;
     }
+
+    public Color getBackground() {
+        return background;
+    }
+
+    public AmbientLight getAmbientLight() {
+        return ambientLight;
+    }
+
+    public Geometries getGeometries() {
+        return geometries;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<LightSource> getLights() {
+        return lights;
+    }
 }
