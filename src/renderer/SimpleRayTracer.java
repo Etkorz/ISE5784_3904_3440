@@ -55,11 +55,11 @@ public class SimpleRayTracer extends RayTracerBase {
     }
 
     /**
-     * calculate the local effects of light on a point
+     * Calculates the local lighting effect for a given geometric point.
      *
-     * @param geoPoint  the point
-     * @param ray the ray being trace
-     * @return the color of the point taking only local effects into account
+     * @param geoPoint  the geometric point to calculate the effect for
+     * @param ray       the ray intersecting the geometric point
+     * @return          the color of the geometric point considering local lighting effects
      */
     private Color calcLocalEffect(GeoPoint geoPoint, Ray ray) {
 
@@ -88,15 +88,15 @@ public class SimpleRayTracer extends RayTracerBase {
         return color;
     }
 
- /**
-////     * calculate the global effects (transparency and reflection) of light on a point
-////     *
-////     * @param gp    the point
-////     * @param ray   the ray that intersects the point
-////     * @param level the recursive level
-////     * @param k     the attenuation factor
-////     * @return the Color of the global effects on the point
-////     */
+    /**
+     * Calculates the global effects (reflection and refraction) of light on a given point in the scene.
+     *
+     * @param gp The point on the geometry where the light effect is being calculated.
+     * @param ray The ray that intersects the geometry at the gp.
+     * @param level The recursion level for reflection and refraction calculations.
+     * @param k The attenuation factor for global effects.
+     * @return The color resulting from the global lighting effects on the gp.
+     */
     private Color calcGlobalEffects(GeoPoint gp, Ray ray, int level, Double3 k) {
         Color color = Color.BLACK;
         Vector v = ray.getDirection();
@@ -107,15 +107,15 @@ public class SimpleRayTracer extends RayTracerBase {
     }
 
 
-/**
- //     * calculate the global effects (transparency and reflection) of light on a point
- //     *
- //     * @param ray   the ray that intersects the point
- //     * @param kx    the attenuation factor of material
- //     * @param level the recursive level
- //     * @param k     the reduced attenuation factor
- //     * @return the Color of the global effects on the point
- //     */
+    /**
+     * Calculates the global effect (either reflection or refraction) of a given ray on the scene.
+     *
+     * @param ray The ray for which the global effect is being calculated.
+     * @param level The recursion level for the calculation.
+     * @param k The cumulative attenuation factor for global effects.
+     * @param kx The specific attenuation factor for the current effect (reflection or refraction).
+     * @return The color resulting from the global effect of the ray on the scene.
+     */
     private Color calcGlobalEffect(Ray ray,int level,  Double3 k, Double3 kx) {
         Double3 kkx = k.product(kx);
         if (kkx.lowerThan(MIN_CALC_COLOR_K)) return Color.BLACK;
@@ -126,15 +126,15 @@ public class SimpleRayTracer extends RayTracerBase {
             calcColor(gp, ray, level - 1, kkx).scale(kx);
     }
 
-/**
- //     * Calculates the color at a given geometric intersection point considering local lighting effects and potentially global effects such as transparency or reflection.
- //     *
- //     * @param gp     The geometric point at which to calculate the color.
- //     * @param ray    The ray that intersected with the geometry at the intersection point.
- //     * @param level  The current recursion level for handling transparency or reflection effects.
- //     * @param k      The accumulated coefficient (e.g., transparency or reflection coefficient) up to the current recursion level.
- //     * @return The calculated color at the intersection point, considering local lighting effects and global effects up to the specified recursion level.
- //     */
+    /**
+     * Calculates the color at a given point in the scene, considering both local and global lighting effects.
+     *
+     * @param gp The point on the geometry where the color is being calculated.
+     * @param ray The ray that intersects the geometry at the gp.
+     * @param level The recursion level for reflection and refraction calculations.
+     * @param k The cumulative attenuation factor for global effects.
+     * @return The color resulting from the combined local and global lighting effects at the gp.
+     */
     private Color calcColor(GeoPoint gp, Ray ray, int level, Double3 k) {
         Geometry geometry = gp.geometry;
         Color color = geometry.getEmission().add(calcLocalEffect(gp, ray));
@@ -143,17 +143,27 @@ public class SimpleRayTracer extends RayTracerBase {
     }
 
     /**
-     * Calculates the color at a given geometric point considering ambient light, emission from the geometry, and local lighting effects.
-     * This method uses recursive ray tracing to handle transparency and reflection up to a specified recursion level.
+     * Calculates the color at a given point in the scene, considering local and global lighting effects,
+     * and adds the ambient light.
      *
-     * @param point  The geometric point at which to calculate the color.
-     * @param ray The ray that intersected with the geometry at the geometric point.
-     * @return The calculated color at the geometric point, taking into account ambient light, emission, local lighting effects (diffuse and specular reflections), and recursive effects of transparency or reflection.
+     * @param point The point on the geometry where the color is being calculated.
+     * @param ray The ray that intersects the geometry at the point.
+     * @return The color resulting from the combined local and global lighting effects at the point,
+     *         including ambient light.
      */
     private Color calcColor(GeoPoint point, Ray ray) {
         return calcColor(point, ray, MAX_CALC_COLOR_LEVEL, INITIAL_K).add(scene.getAmbientLight().getIntensity());
     }
 
+    /**
+     * Calculates the diffuse component of the light at a given point on a surface.
+     *
+     * @param kd The diffuse reflection coefficient of the material.
+     * @param l The direction vector from the point to the light source.
+     * @param n The normal vector at the point on the surface.
+     * @param lightIntensity The intensity of the light hitting the point.
+     * @return The color resulting from the diffuse reflection at the point.
+     */
    private Color calcDiffuse(Double3 kd, Vector l, Vector n, Color lightIntensity) {
 
         double nl = n.dotProduct(l);
@@ -163,16 +173,16 @@ public class SimpleRayTracer extends RayTracerBase {
     }
 
     /**
-     * Calculates the specular reflection component for a given material, surface normal, light vector, view vector, and the dot product of the surface normal and light vector.
+     * Calculates the specular component of the light at a given point on a surface.
      *
-     * @param material The material of the surface.
-     * @param n        The surface normal.
-     * @param l        The light vector.
-     * @param nl       The dot product of the surface normal and light vector.
-     * @param v        The view vector.
-     * @return The specular reflection component.
+     * @param ks The specular reflection coefficient of the material.
+     * @param l The direction vector from the point to the light source.
+     * @param n The normal vector at the point on the surface.
+     * @param v The direction vector from the point to the viewer.
+     * @param nShininess The shininess exponent of the material.
+     * @param lightIntensity The intensity of the light hitting the point.
+     * @return The color resulting from the specular reflection at the point.
      */
-
     private Color calcSpecular(Double3 ks, Vector l, Vector n, Vector v, int nShininess, Color lightIntensity) {
 
         double nl = n.dotProduct(l);
@@ -187,29 +197,27 @@ public class SimpleRayTracer extends RayTracerBase {
         return lightIntensity.scale(amount);
     }
 
-/**
- //     * finds the closest intersection to ray's head with ray
- //     *
- //     * @param ray the ray
- //     * @return the intersection or null of there are no intersections
- //     */
+    /**
+     * Finds the closest intersection point of a given ray with the geometries in the scene.
+     *
+     * @param ray The ray for which the closest intersection is being calculated.
+     * @return The closest intersection point, or null if no intersection is found.
+     */
     private GeoPoint findClosestIntersection(Ray ray) {
         List<GeoPoint> intersections = scene.geometries.findGeoIntersections(ray);
         return intersections == null||intersections.isEmpty() ? null : ray.findClosestGeoPoint(intersections);
     }
 
-/**
- //     * A "non-shading" test method between a point and the light source
- //     * If the list of cuts received is not empty - we will go through the list and if we come across more cuts
- //     * Closer to the top of the beam than the distance between the point and the light source - we will return false
- //     *
- //     * @param gp the geometrical point to check for shading
- //     * @param light the light source to check against
- //     * @param l the vector from the point to the light source
- //     * @param n the normal vector at the point
- //     * @param nl the dot product of the normal vector and the light vector
- //     * @return {@code true} if the point is unshaded (not in shadow), {@code false} otherwise
- //     */
+    /**
+     * Checks if a point on a geometry is unshaded by any other geometry for a given light source.
+     *
+     * @param gp The point on the geometry where shading is being checked.
+     * @param light The light source being checked for shading.
+     * @param l The direction vector from the point to the light source.
+     * @param n The normal vector at the point on the surface.
+     * @param nl The dot product of the normal vector and the light direction vector.
+     * @return True if the point is unshaded by any other geometry, false otherwise.
+     */
     private boolean unshaded(GeoPoint gp, LightSource light, Vector l, Vector n, double nl) {
         Vector lightDirection = l.scale(-1);
         Ray lightRay = new Ray(gp.point, lightDirection, n);
@@ -222,24 +230,26 @@ public class SimpleRayTracer extends RayTracerBase {
     }
 
     /**
- //     * construct refraction(transparency) ray from light intersection with a point
- //     *
- //     * @param gp  the point
- //     * @param ray the ray intersected the point
- //     * @param n   the normal to the geometry from the point
- //     * @return refraction ray
- //     */
+     * Constructs a refracted ray from a given point on a surface.
+     *
+     * @param point The point on the surface where the refraction occurs.
+     * @param v The direction vector of the incoming ray.
+     * @param n The normal vector at the point on the surface.
+     * @return The refracted ray starting from the given point in the direction of the incoming ray.
+     */
     private Ray constructRefractedRay(Point point,Vector v, Vector n) {
+
         return new Ray(point,v, n);
     }
 
     /**
-     * construct reflection ray from light intersection with a point
+     * Constructs a reflected ray from a given point on a surface.
      *
-     * @param gp  the point
-     * @param ray the ray intersected the point
-     * @param n   the normal to the geometry from the point
-     * @return reflection ray
+     * @param gp The point on the surface where reflection occurs.
+     * @param v The direction vector of the incident ray.
+     * @param n The normal vector at the point on the surface.
+     * @return The reflected ray starting from the given point in the direction of reflection,
+     *         or null if the incident ray is parallel to the surface (dot product of v and n is zero).
      */
     private Ray constructReflectedRay(Point gp, Vector v, Vector n) {
 
@@ -252,15 +262,15 @@ public class SimpleRayTracer extends RayTracerBase {
         return new Ray(gp, r, n);
     }
 
-    /*
-     * The function returns the transparency of the point, which is the product of the transparency of the point's geometry
-     * and the transparency of all the geometries between the point and the light source
+    /**
+     * Calculates the transparency factor (ktr) for a given point on a surface towards a light source.
      *
-     * @param gp The point on the geometry that we're currently shading.
-     * @param l the vector from the point to the light source
-     * @param n the normal vector of the point
-     * @param ls the light source
-     * @return The transparency of the point.
+     * @param gp The point on the surface where transparency is being calculated.
+     * @param light The light source towards which transparency is being evaluated.
+     * @param l The direction vector from the point to the light source.
+     * @param n The normal vector at the point on the surface.
+     * @return The transparency factor (ktr) indicating the attenuation of light due to transparency,
+     *         ranging from 0 (completely opaque) to 1 (fully transparent).
      */
     private Double3 transparency(GeoPoint gp, LightSource light, Vector l, Vector n) {
         Vector lightDir = l.scale(-1); // Vector from the point to the light source
