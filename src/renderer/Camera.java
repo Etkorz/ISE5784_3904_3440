@@ -38,6 +38,13 @@ public class Camera implements Cloneable {
 
     private Point center;
 
+    private int samplesPerPixel = 1;
+
+    public Camera setSamplesPerPixel(int samplesPerPixel) {
+
+        this.samplesPerPixel = samplesPerPixel;
+        return this;
+    }
 
     /**
      * private constructor
@@ -68,8 +75,8 @@ public class Camera implements Cloneable {
      */
     public Camera renderImage() {
         // throw new UnsupportedOperationException();
-//        int Nx = imageWriter.getNx();
-//        int Ny = imageWriter.getNy();
+        // int Nx = imageWriter.getNx();
+        // int Ny = imageWriter.getNy();
         for (int i = 0; i < imageWriter.getNx(); i++) {
             for (int j = 0; j < imageWriter.getNy(); j++)
                 castRay(imageWriter.getNx(), imageWriter.getNy(), i, j);
@@ -92,9 +99,32 @@ public class Camera implements Cloneable {
      * @return the color of the closest intersected geometry, if any
      */
     private void castRay(int nX, int nY, int j, int i) {
-        Ray ray = constructRay(nX, nY, j, i);  // casting a ray through pixel
-        Color color = rayTracer.traceRay(ray); // finding the color of the point where the ray is intersected
-        imageWriter.writePixel(j, i, color);   // coloring the pixel in the image
+        if (rayTracer == null) {
+            throw new MissingResourceException("RayTracer", "RayTracer", "RayTracer is missing");
+        }
+        if (samplesPerPixel <= 1) {
+            Ray ray = constructRay(nX, nY, j, i);
+            Color color = rayTracer.traceRay(ray);
+            imageWriter.writePixel(j, i, color);
+
+        } else {
+            Color finalColor = new Color(0, 0, 0);
+            double subPixelSize = 1.0 / samplesPerPixel;    //the size of each subpixel within the pixel.
+            for (int x  = 0; x  < samplesPerPixel; x ++) {
+                for (int y = 0; y < samplesPerPixel; y++) {
+                    // create a random position within the subpixel.
+                    // then scale it to the appropriate subpixel size.
+                    // then subtracting 0.5 to centers the subpixel sampling around the pixel center.
+                    double offsetX = (x  + Math.random()) * subPixelSize - 0.5;
+                    double offsetY = (y + Math.random()) * subPixelSize - 0.5;
+                    Ray ray = constructRay(nX, nY, j + offsetX, i + offsetY);
+                    Color sampleColor = rayTracer.traceRay(ray);
+                    finalColor = finalColor.add(sampleColor);
+                }
+            }
+            finalColor = finalColor.scale(1.0 / (samplesPerPixel * samplesPerPixel));
+            imageWriter.writePixel(j, i, finalColor);
+        }
     }
 
     /**
@@ -131,10 +161,7 @@ public class Camera implements Cloneable {
      * @return A new Ray object representing the ray originating from the camera's position and passing through the specified pixel.
      * @throws IllegalArgumentException If either `nX` or `nY` is zero (division by zero would occur).
      */
-    public Ray constructRay(int nX, int nY, int j, int i) {
-        if (nY == 0 || nX == 0) {
-            throw new IllegalArgumentException("It is impossible to divide by 0");
-        }
+    public Ray constructRay(int nX, int nY, double j, double i) {
         Point Pc = position.add(toDirection.scale(vpDistance));
         double Ry = vpHeight / nY;
         double Rx = vpWidth / nX;
@@ -151,7 +178,9 @@ public class Camera implements Cloneable {
             Pij = Pij.add(upDirection.scale(Yi));
         }
 
-        return new Ray(position, Pij.subtract(position));
+//        return new Ray(position, Pij.subtract(position));
+        Vector Vij = Pij.subtract(position);
+        return new Ray(position, Vij);
     }
 
 
@@ -278,10 +307,11 @@ public class Camera implements Cloneable {
             camera.imageWriter = imageWriter;
             return this;
         }
-//        public Builder setImageWriter(ImageWriter imageWriter) {
-//            camera.imageWriter = imageWriter;
-//            return this;
-//        }
+
+        public Builder setSamplesPerPixel(int i) {
+            camera.samplesPerPixel = i;
+            return this;
+        }
 
         /**
          * Builds and validates a complete Camera object, ensuring all necessary data is present and adheres to constraints.
@@ -341,33 +371,6 @@ public class Camera implements Cloneable {
             } catch (CloneNotSupportedException e) {
                 throw new RuntimeException(e);
             }
-//            final String massege = "Missing rendering data";
-//            if (camera.position == null)
-//                throw new MissingResourceException(massege, Camera.class.getName(), "position");
-//            if (Pto == null && camera.toDirection == null)
-//                throw new MissingResourceException(massege, Camera.class.getName(), "toDirection or Pto");
-//            if (camera.upDirection == null)
-//                throw new MissingResourceException(massege, Camera.class.getName(), "upDirection");
-//            if (alignZero(camera.vpHeight) <= 0)
-//                throw new IllegalStateException("heigth must be positive");
-//            if (alignZero(camera.vpWidth) <= 0)
-//                throw new IllegalStateException("width must be positive");
-//            if (alignZero(camera.vpDistance) <= 0)
-//                throw new IllegalStateException("distance must be positive");
-//            if (!isZero(camera.toDirection.dotProduct(camera.upDirection)))
-//                throw new IllegalArgumentException("direction vectors must be orthogonal");
-//            if (camera.rightDirection == null)
-//                camera.rightDirection = camera.toDirection.crossProduct(camera.upDirection).normalize();
-//            if (this.camera.imageWriter == null)
-//                throw new MissingResourceException(massege, Camera.class.getName(), "imageWriter");
-//            if (this.camera.rayTracer == null)
-//                throw new MissingResourceException(massege, Camera.class.getName(), "rayTracer");
-//            try {
-//
-//                return (Camera) camera.clone();
-//            } catch (CloneNotSupportedException e) {
-//                throw new AssertionError(e);
-        //   }
         }
     }
 }

@@ -44,6 +44,7 @@ public class ReflectionRefractionTests {
 
         cameraBuilder.setLocation(new Point(0, 0, 1000)).setVpDistance(1000)
                 .setVpSize(150, 150)
+                .setSamplesPerPixel(4)
                 .setImageWriter(new ImageWriter("refractionTwoSpheres", 500, 500))
                 .build()
                 .renderImage()
@@ -73,6 +74,7 @@ public class ReflectionRefractionTests {
 
         cameraBuilder.setLocation(new Point(0, 0, 10000)).setVpDistance(10000)
                 .setVpSize(2500, 2500)
+                .setSamplesPerPixel(4)
                 .setImageWriter(new ImageWriter("reflectionTwoSpheresMirrored", 500, 500))
                 .build()
                 .renderImage()
@@ -100,6 +102,7 @@ public class ReflectionRefractionTests {
 
         cameraBuilder.setLocation(new Point(0, 0, 1000)).setVpDistance(1000)
                 .setVpSize(200, 200)
+                .setSamplesPerPixel(4)
                 .setImageWriter(new ImageWriter("refractionShadow", 600, 600))
                 .build()
                 .renderImage()
@@ -149,6 +152,7 @@ public class ReflectionRefractionTests {
 
         cameraBuilder.setLocation(new Point(0, 0, 1000)).setVpDistance(1000)
                 .setVpSize(200, 200)
+                .setSamplesPerPixel(4)
                 .setImageWriter(new ImageWriter("myTestTrianglesAndSpheres", 600, 600))
                 .build()
                 .renderImage()

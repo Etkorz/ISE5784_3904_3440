@@ -273,22 +273,33 @@ public class SimpleRayTracer extends RayTracerBase {
      *         ranging from 0 (completely opaque) to 1 (fully transparent).
      */
     private Double3 transparency(GeoPoint gp, LightSource light, Vector l, Vector n) {
-        Vector lightDir = l.scale(-1); // Vector from the point to the light source
+        // Create a ray from the intersection point towards the light source
+        Vector lightDirection = l.scale(-1); // from point to light source
 
-        Ray lightRay = new Ray(gp.point,lightDir, n); // Ray from the offset point towards the light source
+        Point point = gp.point;
+        Ray lightRay = new Ray(point, lightDirection, n);
 
-        List<GeoPoint> intersections = scene.geometries.findGeoIntersections(lightRay); // Find intersections along the ray
+        //double maxDistance = light.getDistance(point);
+        List<GeoPoint> intersections = scene.geometries.findGeoIntersections(lightRay);
 
-        if (intersections == null) {
-            return Double3.ONE;}
+        // If there are no intersections, return full transparency
+        if (intersections == null)
+            return Double3.ONE;
 
-            Double3 ktr=Double3.ONE;
-            for (GeoPoint gp2 : intersections) {
-                ktr=ktr.product(gp2.geometry.getMaterial().kT);
-                if(ktr.lowerThan(MIN_CALC_COLOR_K))
-                    return Double3.ZERO;
+        Double3 ktr = Double3.ONE;
+
+        for (GeoPoint geo : intersections) {
+            // Check if the intersection point is closer to the light source than the current point
+            if (point.distance(geo.point) < light.getDistance(point)) {
+                // Multiply the transparency factor by the kT value of the intersected geometry
+                ktr = geo.geometry.getMaterial().getkT().product(ktr);
             }
 
+            // If the transparency factor is zero, no light can pass through
+            if (ktr.equals(Double3.ZERO)) {
+                return Double3.ZERO;
+            }
+        }
         return ktr;
     }
 }
