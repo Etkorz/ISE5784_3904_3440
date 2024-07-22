@@ -138,22 +138,22 @@ public class ReflectionRefractionTests {
                 .setEmission(new Color(100, 200, 100))
                 .setMaterial(new Material().setkD(0.4).setkS(0.4).setShininess(20))
 
-        );
+            );
 
-        scene.lights.add(new SpotLight(new Color(700, 400, 400), new Point(60, 50, 0), new Vector(-1, -1, -2)));
-        scene.lights.add(new PointLight(new Color(500, 300, 300), new Point(-60, -50, 0)));
-        scene.lights.add(new DirectionalLight(new Color(150, 150, 150),new Vector(-1, -1, -2)));
+            scene.lights.add(new SpotLight(new Color(700, 400, 400), new Point(60, 50, 0), new Vector(-1, -1, -2)));
+            scene.lights.add(new PointLight(new Color(500, 300, 300), new Point(-60, -50, 0)));
+            scene.lights.add(new DirectionalLight(new Color(150, 150, 150),new Vector(-1, -1, -2)));
 
-        scene.setAmbientLight(new AmbientLight(new Color(WHITE), new Double3(0.15)));
+            scene.setAmbientLight(new AmbientLight(new Color(WHITE), new Double3(0.15)));
 
 
-        cameraBuilder.setLocation(new Point(0, 0, 1000)).setVpDistance(1000)
-                .setVpSize(200, 200)
-                .setImageWriter(new ImageWriter("myTestTrianglesAndSpheres", 600, 600))
-                .build()
-                .renderImage()
-                .writeToImage();
+            cameraBuilder.setLocation(new Point(0, 0, 1000)).setVpDistance(1000)
+                    .setVpSize(200, 200)
+                    .setImageWriter(new ImageWriter("myTestTrianglesAndSpheres", 600, 600))
+                    .build()
+                    .renderImage()
+                    .writeToImage();
 
-    }
+        }
 
 }

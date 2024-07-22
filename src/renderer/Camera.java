@@ -132,9 +132,7 @@ public class Camera implements Cloneable {
      * @throws IllegalArgumentException If either `nX` or `nY` is zero (division by zero would occur).
      */
     public Ray constructRay(int nX, int nY, int j, int i) {
-        if (nY == 0 || nX == 0) {
-            throw new IllegalArgumentException("It is impossible to divide by 0");
-        }
+        
         Point Pc = position.add(toDirection.scale(vpDistance));
         double Ry = vpHeight / nY;
         double Rx = vpWidth / nX;
@@ -341,33 +339,6 @@ public class Camera implements Cloneable {
             } catch (CloneNotSupportedException e) {
                 throw new RuntimeException(e);
             }
-//            final String massege = "Missing rendering data";
-//            if (camera.position == null)
-//                throw new MissingResourceException(massege, Camera.class.getName(), "position");
-//            if (Pto == null && camera.toDirection == null)
-//                throw new MissingResourceException(massege, Camera.class.getName(), "toDirection or Pto");
-//            if (camera.upDirection == null)
-//                throw new MissingResourceException(massege, Camera.class.getName(), "upDirection");
-//            if (alignZero(camera.vpHeight) <= 0)
-//                throw new IllegalStateException("heigth must be positive");
-//            if (alignZero(camera.vpWidth) <= 0)
-//                throw new IllegalStateException("width must be positive");
-//            if (alignZero(camera.vpDistance) <= 0)
-//                throw new IllegalStateException("distance must be positive");
-//            if (!isZero(camera.toDirection.dotProduct(camera.upDirection)))
-//                throw new IllegalArgumentException("direction vectors must be orthogonal");
-//            if (camera.rightDirection == null)
-//                camera.rightDirection = camera.toDirection.crossProduct(camera.upDirection).normalize();
-//            if (this.camera.imageWriter == null)
-//                throw new MissingResourceException(massege, Camera.class.getName(), "imageWriter");
-//            if (this.camera.rayTracer == null)
-//                throw new MissingResourceException(massege, Camera.class.getName(), "rayTracer");
-//            try {
-//
-//                return (Camera) camera.clone();
-//            } catch (CloneNotSupportedException e) {
-//                throw new AssertionError(e);
-        //   }
         }
     }
 }
