@@ -2,6 +2,8 @@ package renderer;
 
 import static java.awt.Color.*;
 
+import lighting.DirectionalLight;
+import lighting.PointLight;
 import org.junit.jupiter.api.Test;
 
 import geometries.*;
@@ -17,8 +19,8 @@ public class ShadowTests {
     /** Scene of the tests */
     private final Scene          scene      = new Scene("Test scene");
     /** Camera builder of the tests */
-    private final Camera.Builder camera     = Camera.getBuilder()
-            .setDirection(new Vector(0, 0, -1), new Vector (0,1,0))
+    private final Camera.Builder camera = Camera.getBuilder()
+            .setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
             .setLocation(new Point(0, 0, 1000)).setVpDistance(1000)
             .setVpSize(200, 200)
             .setSamplesPerPixel(4)
@@ -86,6 +88,7 @@ public class ShadowTests {
                 new Point(-76, -76, 70));
     }
 
+
     /** Produce a picture of a two triangles lighted by a spot light with a Sphere
      * producing a shading */
     @Test
@@ -110,5 +113,6 @@ public class ShadowTests {
                 .renderImage()
                 .writeToImage();
     }
+
 
 }

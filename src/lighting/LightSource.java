@@ -5,6 +5,7 @@ import primitives.Color;
 import primitives.Point;
 import primitives.Vector;
 
+import java.util.List;
 /**
  *LightSource class represents a light source in the scene
  */

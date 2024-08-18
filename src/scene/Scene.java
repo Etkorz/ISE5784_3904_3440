@@ -13,7 +13,7 @@ public class Scene {
     public Color background = Color.BLACK;
     public AmbientLight ambientLight = AmbientLight.NONE;
     public Geometries geometries = new Geometries();
-
+    public int softShade = 5;
     public List<LightSource> lights = new ArrayList<>();
 
     public Scene(String name) {
@@ -49,6 +49,11 @@ public class Scene {
         return this;
     }
 
+    public Scene setSoftShade(int shade){
+        this.softShade=shade;
+        return this;
+    }
+
     public Color getBackground() {
         return background;
     }
@@ -68,4 +73,5 @@ public class Scene {
     public List<LightSource> getLights() {
         return lights;
     }
+    public int getSoftShade() {return softShade;}
 }

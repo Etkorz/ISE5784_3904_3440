@@ -28,7 +28,8 @@ public class ReflectionRefractionTests {
     /** Camera builder for the tests with triangles */
     private final Camera.Builder cameraBuilder = Camera.getBuilder()
             .setDirection(Point.ZERO, new Vector(0,1,0))
-            .setRayTracer(new SimpleRayTracer(scene));
+            .setRayTracer(new SimpleRayTracer(scene))
+            .setSamplesPerPixel(4);
 
     /** Produce a picture of a sphere lighted by a spot light */
     @Test
@@ -41,10 +42,9 @@ public class ReflectionRefractionTests {
         scene.lights.add(
                 new SpotLight(new Color(1000, 600, 0), new Point(-100, -100, 500), new Vector(-1, -1, -2))
                         .setkL(0.0004).setkQ(0.0000006));
-
         cameraBuilder.setLocation(new Point(0, 0, 1000)).setVpDistance(1000)
                 .setVpSize(150, 150)
-                .setSamplesPerPixel(4)
+                .setSamplesPerPixel(10)
                 .setImageWriter(new ImageWriter("refractionTwoSpheres", 500, 500))
                 .build()
                 .renderImage()
@@ -74,7 +74,7 @@ public class ReflectionRefractionTests {
 
         cameraBuilder.setLocation(new Point(0, 0, 10000)).setVpDistance(10000)
                 .setVpSize(2500, 2500)
-                .setSamplesPerPixel(4)
+                .setSamplesPerPixel(10)
                 .setImageWriter(new ImageWriter("reflectionTwoSpheresMirrored", 500, 500))
                 .build()
                 .renderImage()
@@ -102,7 +102,7 @@ public class ReflectionRefractionTests {
 
         cameraBuilder.setLocation(new Point(0, 0, 1000)).setVpDistance(1000)
                 .setVpSize(200, 200)
-                .setSamplesPerPixel(4)
+                .setSamplesPerPixel(10)
                 .setImageWriter(new ImageWriter("refractionShadow", 600, 600))
                 .build()
                 .renderImage()
@@ -113,7 +113,7 @@ public class ReflectionRefractionTests {
     @Test
     public void myTest() {
         scene.geometries.add( //
-                // יצירת ריבוע (באמצעות מטוס)
+                // יצירת ריבוע (באמצעות משטח)
                 new Plane(
                         new Point(-100, -100, -200),
                         new Point(100, -100, -200),
@@ -152,12 +152,14 @@ public class ReflectionRefractionTests {
 
         cameraBuilder.setLocation(new Point(0, 0, 1000)).setVpDistance(1000)
                 .setVpSize(200, 200)
-                .setSamplesPerPixel(4)
+                .setSamplesPerPixel(10)
                 .setImageWriter(new ImageWriter("myTestTrianglesAndSpheres", 600, 600))
+                .setAdaptive(true)
                 .build()
                 .renderImage()
                 .writeToImage();
 
     }
+
 
 }

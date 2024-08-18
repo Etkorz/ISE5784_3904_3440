@@ -1,8 +1,11 @@
 package renderer;
-
+import primitives.Vector;
 import primitives.Color;
+import primitives.Point;
 import primitives.Ray;
 import scene.Scene;
+
+import java.util.List;
 
 /**
  * An abstract class representing a basic Ray Tracer.
@@ -29,4 +32,7 @@ public abstract class RayTracerBase {
      * @return
      */
     public abstract Color traceRay(Ray ray);
+
+    public abstract Color adaptiveSuperSamplingRec(Point centerP, double Width, double Height, double minWidth, double minHeight, Point cameraLoc, Vector Vright, Vector Vup, List<Point> prePoints);
+
 }

@@ -4,10 +4,13 @@ import primitives.Color;
 import primitives.Point;
 import primitives.Vector;
 
+import java.util.List;
+
 public class DirectionalLight extends Light implements LightSource {
 
 
     private final Vector direction;
+
 
     /**
      * Constructs a `DirectionalLight` object with the specified intensity and direction.

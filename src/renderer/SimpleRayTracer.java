@@ -11,11 +11,12 @@ import lighting.LightSource;
 import primitives.*;
 import scene.Scene;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
-// * This class is an extended class of a ray tracer.
-// */
+* This class is an extended class of a ray tracer.
+*/
 public class SimpleRayTracer extends RayTracerBase {
 
     /**
@@ -33,6 +34,9 @@ public class SimpleRayTracer extends RayTracerBase {
     //Rayhead offset size for shading rays
     private static final double EPS = 0.1;
 
+    private boolean softShadow = false;
+
+
     /**
      * Construct
      *
@@ -40,6 +44,15 @@ public class SimpleRayTracer extends RayTracerBase {
      */
     public SimpleRayTracer(Scene scene) {
         super(scene);
+    }
+
+    public boolean isSoftShadow() {
+        return softShadow;
+    }
+
+    public SimpleRayTracer setSoftShadow(boolean softShadow) {
+        this.softShadow = softShadow;
+        return this;
     }
 
     /**
@@ -86,6 +99,7 @@ public class SimpleRayTracer extends RayTracerBase {
             }
         }
         return color;
+
     }
 
     /**
@@ -301,6 +315,57 @@ public class SimpleRayTracer extends RayTracerBase {
             }
         }
         return ktr;
+    }
+
+
+    @Override
+    public Color adaptiveSuperSamplingRec(Point centerP, double Width, double Height, double minWidth, double minHeight, Point cameraLocation, Vector Vright, Vector Vup, List<Point> prePoints) {
+
+        if (Width < minWidth * 2 || Height < minHeight * 2) {
+            return this.traceRay(new Ray(cameraLocation, centerP.subtract(cameraLocation)));
+        }
+
+        List<Point> nextCenterPList = new LinkedList<>();
+        List<Point> cornersList = new LinkedList<>();
+        List<primitives.Color> colorList = new LinkedList<>();
+        Point tempCorner;
+        Ray tempRay;
+        for (int i = -1; i <= 1; i += 2) {
+            for (int j = -1; j <= 1; j += 2) {
+
+                tempCorner = centerP.add(Vright.scale(i * Width / 2)).add(Vup.scale(j * Height / 2));
+                cornersList.add(tempCorner);
+                if (prePoints == null || !prePoints.contains(tempCorner)) {
+                    tempRay = new Ray(cameraLocation, tempCorner.subtract(cameraLocation));
+                    nextCenterPList.add(centerP.add(Vright.scale(i * Width / 4)).add(Vup.scale(j * Height / 4)));
+                    colorList.add(traceRay(tempRay));
+                }
+            }
+        }
+
+
+        if (nextCenterPList == null || nextCenterPList.size() == 0) {
+            return primitives.Color.BLACK;
+        }
+
+
+        boolean isAllEquals = true;
+        primitives.Color tempColor = colorList.get(0);
+        for (primitives.Color color : colorList) {
+            if (!tempColor.equals(color))
+                isAllEquals = false;
+        }
+        if (isAllEquals && colorList.size() > 1)
+            return tempColor;
+
+
+        tempColor = primitives.Color.BLACK;
+        for (Point center : nextCenterPList) {
+            tempColor = tempColor
+                    .add(adaptiveSuperSamplingRec(center, Width / 2, Height / 2, minWidth, minHeight, cameraLocation, Vright, Vup, cornersList));
+        }
+        return tempColor.reduce(nextCenterPList.size());
+
     }
 }
 
