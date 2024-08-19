@@ -129,6 +129,7 @@ public class Camera implements Cloneable {
         if (rayTracer == null) {
             throw new MissingResourceException("RayTracer", "RayTracer", "RayTracer is missing");
         }
+
         Color color;
         if (!adaptive){
             if (samplesPerPixel <= 1) {
