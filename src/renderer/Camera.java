@@ -181,7 +181,7 @@ public class Camera implements Cloneable {
         int numOfRaysInRowCol = (int) Math.floor(Math.sqrt(numOfRays));
 
         // If only one ray is used, directly trace the ray through the pixel
-        if (numOfRaysInRowCol == 1) {
+        if (numOfRaysInRowCol <= 1) {
             Ray ray = constructRay(nX, nY, i, j);
             return rayTracer.traceRay(ray);
         }

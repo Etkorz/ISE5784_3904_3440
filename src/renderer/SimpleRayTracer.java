@@ -318,23 +318,42 @@ public class SimpleRayTracer extends RayTracerBase {
     }
 
 
+    /**
+     * This function performs adaptive super-sampling by casting multiple rays through a pixel,
+     * aiming to improve the image quality by reducing noise and smoothing edges.
+     *
+     * @param centerP       The center point of the current pixel.
+     * @param Width         The width of the current pixel.
+     * @param Height        The height of the current pixel.
+     * @param minWidth      The minimum width to which the pixel can be subdivided.
+     * @param minHeight     The minimum height to which the pixel can be subdivided.
+     * @param cameraLocation The location of the camera.
+     * @param Vright        The vector pointing to the right of the image.
+     * @param Vup           The vector pointing up in the image.
+     * @param prePoints     The list of points that were checked previously.
+     * @return The color calculated after adaptive super-sampling.
+     **/
     @Override
     public Color adaptiveSuperSamplingRec(Point centerP, double Width, double Height, double minWidth, double minHeight, Point cameraLocation, Vector Vright, Vector Vup, List<Point> prePoints) {
-
+        // Check if the pixel is too small to be subdivided further
         if (Width < minWidth * 2 || Height < minHeight * 2) {
             return this.traceRay(new Ray(cameraLocation, centerP.subtract(cameraLocation)));
         }
-
+        // Lists to hold the center points, corners, and colors of the sub-pixels
         List<Point> nextCenterPList = new LinkedList<>();
         List<Point> cornersList = new LinkedList<>();
         List<primitives.Color> colorList = new LinkedList<>();
         Point tempCorner;
         Ray tempRay;
+        // Loop through the corners of the pixel and check for color variations between them
         for (int i = -1; i <= 1; i += 2) {
             for (int j = -1; j <= 1; j += 2) {
 
+                // Calculate the corner of the current pixel
                 tempCorner = centerP.add(Vright.scale(i * Width / 2)).add(Vup.scale(j * Height / 2));
                 cornersList.add(tempCorner);
+
+                // Check if the corner has already been checked
                 if (prePoints == null || !prePoints.contains(tempCorner)) {
                     tempRay = new Ray(cameraLocation, tempCorner.subtract(cameraLocation));
                     nextCenterPList.add(centerP.add(Vright.scale(i * Width / 4)).add(Vup.scale(j * Height / 4)));
@@ -343,22 +362,23 @@ public class SimpleRayTracer extends RayTracerBase {
             }
         }
 
-
+        // Check if there are no new corners to sample
         if (nextCenterPList == null || nextCenterPList.size() == 0) {
             return primitives.Color.BLACK;
         }
 
-
+        // Check if all the colors of the corners are the same
         boolean isAllEquals = true;
         primitives.Color tempColor = colorList.get(0);
         for (primitives.Color color : colorList) {
             if (!tempColor.equals(color))
                 isAllEquals = false;
         }
+
         if (isAllEquals && colorList.size() > 1)
             return tempColor;
 
-
+        // Compute the average color of the sub-pixels by recursively calling this function
         tempColor = primitives.Color.BLACK;
         for (Point center : nextCenterPList) {
             tempColor = tempColor
